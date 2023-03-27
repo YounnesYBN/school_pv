@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comments;
 use App\Models\DataTable;
 use App\Models\Donnee;
+use App\Models\Element;
 use App\Models\Filiere;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -263,4 +265,59 @@ class OperationController extends Controller
 
     }
 
+    public function setDefaultValuesForOtherElements($code_filier, $annee){
+        $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
+
+        $Non_avoided_elements = Element::where([
+            ["type_comment", "!=", "select"]
+        ])->WhereNotIn("id", [
+            1, 2, 14, 15, 16, 17, 18, 19, 39, 40, 41, 42, 43
+        ])->get();
+
+        foreach ($Non_avoided_elements as $element) {
+            $donne = Donnee::where([
+                ["filiere_id", "=", $id_code_filier],
+                ["element_id", "=", $element->id],
+            ])->first();
+            
+            if ($donne) {
+                $donne->value = 0;
+            } else {
+                $donne = new Donnee();
+                $donne->filiere_id = $id_code_filier;
+                $donne->element_id = $element->id;
+                $donne->value = 0;
+            }
+
+            $donne->save();
+        }
+
+    }
+
+
+    public function setDefaultCommentForOtherElements($code_filier, $annee){
+        $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
+
+        $elements = Element::all();
+
+        foreach ($elements as $element) {
+            $comment = Comments::where([
+                ["filiere_id", "=", $id_code_filier],
+                ["element_id", "=", $element->id],
+            ])->first();
+            
+            if (!isset($comment)) {
+                $comment = new Comments();
+                $comment->filiere_id = $id_code_filier;
+                $comment->element_id = $element->id;
+                $comment->value = json_encode([]);
+                $comment->save();
+            }
+        }
+
+    }
+    
+
 }
+
+

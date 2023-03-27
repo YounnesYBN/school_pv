@@ -35,9 +35,52 @@ class ElementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Element $element)
+    public function show(Element $Element)
     {
+
+        $Selected_comment = null;
         //
+        $all_Comments = $Element->comment()->get();
+
+        foreach ($all_Comments as $comment) {
+            $filier_comment = $comment->filiere()->first();
+
+            if (
+                $filier_comment->code_filiere == session("selected_filier") &&
+                $filier_comment->annee == session("selected_year")
+            ) {
+                $Selected_comment = $comment;
+            }
+        }
+        session([
+            "selected_element" => $Element->id,
+            "selected_comment" => $Selected_comment?$Selected_comment->id:null,
+        ]);
+        
+        if ($Selected_comment) {
+            return view("pages.comment", [
+                "data" => [
+                    "found" => true,
+                    "elementOBJ" => $Element,
+                    "commentOBJ" => $Selected_comment,
+                    "aspeetOBJ" =>$Element->aspeet()->first()
+                ],
+                "comments" => (array) json_decode($Selected_comment->value)
+            ]);
+        } else {
+            return view("pages.comment", [
+                "data" => [
+                    "found" => true,
+                    "elementOBJ" => $Element,
+                    "commentOBJ" => null,
+                    "aspeetOBJ" =>$Element->aspeet()->first()
+
+
+                ],
+                "comments" => []
+
+            ]);
+        }
     }
 
     /**

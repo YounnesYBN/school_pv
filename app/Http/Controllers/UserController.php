@@ -10,36 +10,46 @@ class UserController extends Controller
 {
     //
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
+
 
         $request->validate([
-            "email"=>"required",
-            "password"=>"required",
+            "email" => "required",
+            "password" => "required",
+        ], [
+            "email" => "nom est requis",
+            "password" => "mot de pass est requis",
         ]);
 
+        try {
+            //code...
+            //throw $th;
+            $check = User::all()->where('email', $request->input("email"))->where("password", $request->password)->first();
 
-        $check = User::all()->where('email',$request->input("email"))->where("password",$request->password)->first();
+            if ($check) {
 
-        if($check){
-           
-            session([
-                "type"=>$check->type,
-                "id"=>$check->id,
-                "email"=>$check->email,
-            ]);
+                session([
+                    "type" => $check->type,
+                    "id" => $check->id,
+                    "email" => $check->email,
+                ]);
 
-            return redirect("/");
-        }else{
-            return back()->with("error","login faild");
+                return redirect("/");
+            } else {
+                return back()->with("error", "la connexion a échoué, les informations ne sont pas correctes");
+            }
+        } catch (\Throwable $th) {
+
+            return back()->with("error","quelque chose s'est mal passé");
         }
-        
     }
 
-    public function logout(){
+    public function logout()
+    {
 
         session()->flush();
 
         return redirect("login");
-        
     }
 }

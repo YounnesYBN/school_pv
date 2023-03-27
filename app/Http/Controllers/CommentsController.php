@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Comments;
+use App\Models\Filiere;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+
 
 class CommentsController extends Controller
 {
@@ -30,21 +31,64 @@ class CommentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $id_element = session("selected_element");
+        $id_filier = Filiere::where([
+            ["code_filiere","=",session("selected_filier")],
+            ["annee","=",session("selected_year")]
+        ])->first()->id;
+        $active = $request->checkbox_active ? true : false;
+
+        $request->validate([
+            "input_comment" => "required",
+        ],[
+            "input_comment" => [
+                "required" => "un commentaire est requis"
+            ]
+        ]);
+
+        $comment = Comments::where([
+            ["filiere_id","=",$id_filier],
+            ["element_id","=",$id_element],
+        ])->first();
+
+        if($comment){
+            $newid = 0;
+            $values = json_decode($comment->value);
+            foreach ($values as $value) {
+                if($newid < $value->id){
+                    $newid = $value->id; 
+                };
+            }
+            $values[] = ["id"=>$newid + 1 ,"value"=>$request->input_comment,"active"=>$active];
+            $comment->value = json_encode($values);
+        }else{
+            $comment = new Comments();
+            $comment->filiere_id = $id_filier;
+            $comment->element_id = $id_element;
+            $comment->value = json_encode([[
+                "id"=> 1 ,"value"=>$request->input_comment,"active"=>$active
+            ]]);
+
+        }
+        $comment->save();
+        return back();
+
+        
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comments $comments)
+    public function show(string $id)
     {
         //
+        return $id;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Comments $comments)
+    public function edit(string $id)
     {
         //
     }
@@ -52,7 +96,7 @@ class CommentsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comments $comments)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -60,7 +104,7 @@ class CommentsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comments $comments)
+    public function destroy(string $id)
     {
         //
     }

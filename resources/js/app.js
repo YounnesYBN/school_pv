@@ -32,9 +32,7 @@ function changeOption() {
              Infographie
             </option>
 
-            <option value="NTIC_CMOSW_FQ">
-                Certification Microsoft Office Specialist en Word
-            </option>
+            
             <option value="AGC_COMPT_BP">
                 Comptabilité
             </option>
@@ -95,16 +93,7 @@ function changeOption() {
             <option value="DIA_IDOCC_TS">
                 Infrastructure Digitale option Cloud Computing
             </option>
-            <option value="NTIC_CMOSA_FQ">
-                Certification Microsoft Office Specialist en Access
-            </option>
-            <option value="NTIC_CMOSE_FQ">
-                Certification Microsoft Office Specialist en Excel
-            </option>
-            <option value="NTIC_CMOSP_FQ">
-
-                Certification Microsoft Office Specialist en PowerPoint
-            </option>
+            
     `;
     }else {
         document.getElementById("filierSelect").innerHTML =`
