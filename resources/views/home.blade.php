@@ -157,7 +157,7 @@
 
         <div class="flex justify-center items-center gap-10 mt-8" >
             <button type="submit" id="save-button" class= " text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ">Sauvegarder les modifications</button>
-            <button type="button" id="download_file_button" class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"><a href="{{Route("OnExport")}}">Télécharger le fichier excel de Toute les filiéres</a></button>
+            <button type="button"  class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"><a href="{{Route("OnExport")}}" id="download_file_button">Télécharger le fichier excel de Toute les filiéres</a></button>
         </div>
 
     </form>
@@ -168,6 +168,7 @@
     document.getElementById('save-button').addEventListener("click", (e) => {
 
         var ele = e.target;
+        
         ele.innerHTML = `
         
         Chargement... <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,6 +177,7 @@
     </svg>
     
         `;
+        
     })
 
     document.getElementById('download_file_button').addEventListener("click", (e) => {
@@ -189,6 +191,11 @@ S'il vous plaît, attendez... <svg aria-hidden="true" role="status" class="inlin
 </svg>
 
 `;
+
+setTimeout(() => {
+            console.log("hii");
+            ele.innerHTML = "Télécharger le fichier excel de Toute les filiéres"
+        }, 20*1000);
 })
 
     

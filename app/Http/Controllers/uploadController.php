@@ -83,14 +83,14 @@ class uploadController extends Controller
             $allFilier = Filiere::all();
             foreach ($allFilier as $filier) {
 
-                $operationOBJ->setDefaultValuesForOtherElements($filier->code_filiere, $filier->annee);
-                $operationOBJ->setDefaultCommentForOtherElements($filier->code_filiere, $filier->annee);
                 $operationOBJ->getNmbreTotalGroup($filier->code_filiere, $filier->annee);
                 $operationOBJ->getNombreTotalGroupesValides($filier->code_filiere, $filier->annee);
                 $operationOBJ->getNombreTotalGroupesTaux($filier->code_filiere, $filier->annee, $request->convenable, $request->moiyen);
                 $operationOBJ->getTotalModule($filier->code_filiere, $filier->annee);
                 $operationOBJ->getTotalModuleAchever($filier->code_filiere, $filier->annee);
                 $operationOBJ->getTotalEFM_local_regional($filier->code_filiere, $filier->annee);
+                $operationOBJ->setDefaultValuesForOtherElements($filier->code_filiere, $filier->annee);
+                $operationOBJ->setDefaultCommentForOtherElements($filier->code_filiere, $filier->annee);
             }
             return redirect("/");
         } catch (\Throwable $th) {

@@ -14,7 +14,8 @@ class ExportController extends Controller
 
     public function Export()
     {
-        return Excel::download(new DataExport, 'Filiere.xlsx');
+        $file_name = "calcul_demande_sur_la_base_+_CARTE_FORMATION_REALISEE ".now();
+        return Excel::download(new DataExport, "$file_name.xlsx");
         
         
     }
