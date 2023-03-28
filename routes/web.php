@@ -40,7 +40,7 @@ Route::post("/Onlogin",[UserController::class,"login"])->name("Onlogin");
 Route::get("/Onlogout",[UserController::class,"logout"])->name("Onlogout");
 
 //controller upload when user upload a file
-Route::post("/Onupload",[uploadController::class,"Onupload"])->name("Onupload");
+Route::post("/Onupload",[uploadController::class,"Onupload"])->name("Onupload")->middleware("import_middleware");
 
 //resource controller of Element
 Route::resource('/Element',ElementController::class)->names([
@@ -57,4 +57,4 @@ Route::resource('/Comment',CommentsController::class)->names([
 Route::get("/deleteComment/{Comment}/{id}",[UpdateController::class,"DeleteComment"])->name("deleteController");
 Route::get("/updateComment/{Comment}/{id}",[UpdateController::class,"updateComment"])->name("updateController");
 
-Route::get("/OnExport",[ExportController::class,"Export"])->name("OnExport");
+Route::get("/OnExport",[ExportController::class,"Export"])->name("OnExport")->middleware("export_middleware");
