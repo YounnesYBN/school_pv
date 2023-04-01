@@ -59,6 +59,7 @@ class OperationController extends Controller
         } else {
             $allGroupDistinct = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
         }
+
         foreach ($allGroupDistinct as $group) {
             if ($code_filier == 'all' and $annee == 12) {
                 $numberModel = DB::table("data_tables")->where("groupe", $group->groupe)->count();
@@ -74,7 +75,7 @@ class OperationController extends Controller
                 $count++;
             }
         }
-
+        
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
         $id_element = 2;
 

@@ -17,6 +17,8 @@ use App\Models\Filiere;
 class uploadController extends Controller
 {
     //
+    public $moiyen ;
+    public $convonable ;
 
     public function Onupload(Request $request): string
     {
@@ -79,19 +81,24 @@ class uploadController extends Controller
 
         try {
             //code...
-            $operationOBJ = new OperationController();
-            $allFilier = Filiere::all();
-            foreach ($allFilier as $filier) {
+            $allFilier = Filiere::all()->toArray();
+            $this->moiyen =  $request->moiyen;
+            $this->convonable =  $request->convenable;
+            array_map(function($filier){
+                $operationOBJ = new OperationController();
+                
+                $operationOBJ->getNmbreTotalGroup($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->getNombreTotalGroupesValides($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->getNombreTotalGroupesTaux($filier["code_filiere"], $filier["annee"], $this->convonable, $this->moiyen);
+                $operationOBJ->getTotalModule($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->getTotalModuleAchever($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->getTotalEFM_local_regional($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->setDefaultValuesForOtherElements($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->setDefaultCommentForOtherElements($filier["code_filiere"], $filier["annee"]);
+            },$allFilier);
+            // foreach ($allFilier as $filier) {
 
-                $operationOBJ->getNmbreTotalGroup($filier->code_filiere, $filier->annee);
-                $operationOBJ->getNombreTotalGroupesValides($filier->code_filiere, $filier->annee);
-                $operationOBJ->getNombreTotalGroupesTaux($filier->code_filiere, $filier->annee, $request->convenable, $request->moiyen);
-                $operationOBJ->getTotalModule($filier->code_filiere, $filier->annee);
-                $operationOBJ->getTotalModuleAchever($filier->code_filiere, $filier->annee);
-                $operationOBJ->getTotalEFM_local_regional($filier->code_filiere, $filier->annee);
-                $operationOBJ->setDefaultValuesForOtherElements($filier->code_filiere, $filier->annee);
-                $operationOBJ->setDefaultCommentForOtherElements($filier->code_filiere, $filier->annee);
-            }
+            // }
             return redirect("/");
         } catch (\Throwable $th) {
             //throw $th;
