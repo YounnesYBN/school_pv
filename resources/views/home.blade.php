@@ -195,7 +195,7 @@ S'il vous plaît, attendez... <svg aria-hidden="true" role="status" class="inlin
 setTimeout(() => {
             console.log("hii");
             ele.innerHTML = "Télécharger le fichier excel de Toute les filiéres"
-        }, 20*1000);
+        }, 17*1000);
 })
 
     

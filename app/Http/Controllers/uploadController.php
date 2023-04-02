@@ -58,7 +58,7 @@ class uploadController extends Controller
         }
 
         if (DataTable::all()->first()) {
-
+            
             DataTable::truncate();
         }
 
@@ -96,10 +96,9 @@ class uploadController extends Controller
                 $operationOBJ->setDefaultValuesForOtherElements($filier["code_filiere"], $filier["annee"]);
                 $operationOBJ->setDefaultCommentForOtherElements($filier["code_filiere"], $filier["annee"]);
             },$allFilier);
-            // foreach ($allFilier as $filier) {
-
-            // }
+            
             return redirect("/");
+            
         } catch (\Throwable $th) {
             //throw $th;
 

@@ -16,17 +16,39 @@ class OperationController extends Controller
 {
     //
 
+    protected $code_filier;
+    protected $annee;
+    protected $count;
+    protected $ConMoiFaiARRAY;
+    protected $moiyen;
+    protected $convenable;
+
 
     public function getNmbreTotalGroup($code_filier, $annee)
     {
-        if ($code_filier == 'all' and $annee == 12) {
-            $NmbreTotalGroup = DataTable::distinct("groupe")->count();
-        } elseif (in_array($code_filier,["all_a2","all_a1"]) and $annee != 12) {
-            $NmbreTotalGroup = DataTable::where("annee_formation", $annee)->distinct("groupe")->count();
-        } else {
-            $NmbreTotalGroup = DataTable::where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->count();
-        }
+        $NmbreTotalGroup = 0;
+        //old code
 
+        // if ($code_filier == 'all' and $annee == 12) {
+        //     $NmbreTotalGroup = DataTable::distinct("groupe")->count();
+        // } elseif (in_array($code_filier, ["all_a2", "all_a1"]) and $annee != 12) {
+        //     $NmbreTotalGroup = DataTable::where("annee_formation", $annee)->distinct("groupe")->count();
+        // } else {
+        //     $NmbreTotalGroup = DataTable::where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->count();
+        // }
+
+        switch (true) {
+            case $code_filier == "all":
+                $NmbreTotalGroup = DataTable::distinct("groupe")->count();
+                break;
+
+            case in_array($code_filier, ["all_a2", "all_a1"]):
+                $NmbreTotalGroup = DataTable::where("annee_formation", $annee)->distinct("groupe")->count();
+                break;
+            default:
+                $NmbreTotalGroup = DataTable::where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->count();
+                break;
+        }
 
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
         $eleArray = [1, 39];
@@ -34,7 +56,7 @@ class OperationController extends Controller
 
             $donne = Donnee::all()->where("filiere_id", $id_code_filier)->where("element_id", $ele)->first();
 
-            if ($donne) {
+            if (isset($donne)) {
                 $donne->value = $NmbreTotalGroup;
             } else {
                 $donne = new Donnee();
@@ -51,41 +73,96 @@ class OperationController extends Controller
     public function getNombreTotalGroupesValides($code_filier, $annee)
     {
 
+        $allGroupDistinct = null;
         $count = 0;
-        if ($code_filier == 'all' and $annee == 12) {
-            $allGroupDistinct = DB::table("data_tables")->distinct("groupe")->get("groupe");
-        } elseif (in_array($code_filier,["all_a2","all_a1"])  and $annee != 12) {
-            $allGroupDistinct = DB::table("data_tables")->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
-        } else {
-            $allGroupDistinct = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
+        // ---------
+        $this->code_filier = $code_filier;
+        $this->annee = $annee;
+        $this->count = 0;
+
+        //old code 
+        // if ($code_filier == 'all' and $annee == 12) {
+        //     $allGroupDistinct = DB::table("data_tables")->distinct("groupe")->get("groupe");
+        // } elseif (in_array($code_filier, ["all_a2", "all_a1"])  and $annee != 12) {
+        //     $allGroupDistinct = DB::table("data_tables")->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
+        // } else {
+        //     $allGroupDistinct = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
+        // }
+
+        switch (true) {
+            case $code_filier == "all":
+                $allGroupDistinct = DB::table("data_tables")->distinct("groupe")->get("groupe");
+                break;
+
+            case in_array($code_filier, ["all_a2", "all_a1"]):
+                $allGroupDistinct = DB::table("data_tables")->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
+                break;
+            default:
+                $allGroupDistinct = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->get("groupe");
+                break;
         }
 
-        foreach ($allGroupDistinct as $group) {
-            if ($code_filier == 'all' and $annee == 12) {
-                $numberModel = DB::table("data_tables")->where("groupe", $group->groupe)->count();
-                $numberModelVlide = DB::table("data_tables")->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
-            } elseif (in_array($code_filier,["all_a2","all_a1"])  and $annee != 12) {
-                $numberModel = DB::table("data_tables")->where("annee_formation", $annee)->where("groupe", $group->groupe)->count();
-                $numberModelVlide = DB::table("data_tables")->where("annee_formation", $annee)->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
-            } else {
-                $numberModel = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("groupe", $group->groupe)->count();
-                $numberModelVlide = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+        // --------------------------
+
+
+        // foreach ($allGroupDistinct as $group) {
+        //     if ($code_filier == 'all' and $annee == 12) {
+        //         $numberModel = DB::table("data_tables")->where("groupe", $group->groupe)->count();
+        //         $numberModelVlide = DB::table("data_tables")->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+        //     } elseif (in_array($code_filier, ["all_a2", "all_a1"])  and $annee != 12) {
+        //         $numberModel = DB::table("data_tables")->where("annee_formation", $annee)->where("groupe", $group->groupe)->count();
+        //         $numberModelVlide = DB::table("data_tables")->where("annee_formation", $annee)->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+        //     } else {
+        //         $numberModel = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("groupe", $group->groupe)->count();
+        //         $numberModelVlide = DB::table("data_tables")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+        //     }
+
+
+        //     if ($numberModel == $numberModelVlide) {
+        //         $count++;
+        //     }
+        // }
+
+        array_map(function ($group) {
+            $numberModel = 0;
+            $numberModelVlide = 0;
+            switch (true) {
+                case $this->code_filier == "all":
+                    $numberModel = DB::table("data_tables")->where("groupe", $group->groupe)->count();
+                    $numberModelVlide = DB::table("data_tables")->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+                    break;
+
+                case in_array($this->code_filier, ["all_a2", "all_a1"]):
+                    $numberModel = DB::table("data_tables")->where("annee_formation", $this->annee)->where("groupe", $group->groupe)->count();
+                    $numberModelVlide = DB::table("data_tables")->where("annee_formation", $this->annee)->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+
+                    break;
+                default:
+                    $numberModel = DB::table("data_tables")->where("code_filiere", $this->code_filier)->where("annee_formation", $this->annee)->where("groupe", $group->groupe)->count();
+                    $numberModelVlide = DB::table("data_tables")->where("code_filiere", $this->code_filier)->where("annee_formation", $this->annee)->where("groupe", $group->groupe)->where("Taux_Realisation_P_syn", ">=", 95)->count("groupe");
+
+                    break;
             }
-            if ($numberModel == $numberModelVlide) {
-                $count++;
+
+            if ($numberModel === $numberModelVlide) {
+                $this->count++;
             }
-        }
-        
+        }, $allGroupDistinct->toArray());
+
+
+        // ------------------------------
+
+
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
         $id_element = 2;
 
         $donne = Donnee::all()->where("filiere_id", $id_code_filier)->where("element_id", $id_element)->first();
 
-        if ($donne) {
-            $donne->value = $count;
+        if (isset($donne)) {
+            $donne->value = $this->count;
         } else {
             $donne = new Donnee();
-            $donne->value = $count;
+            $donne->value = $this->count;
             $donne->filiere_id = $id_code_filier;
             $donne->element_id = $id_element;
         }
@@ -95,8 +172,11 @@ class OperationController extends Controller
 
     public function getNombreTotalGroupesTaux($code_filier, $annee, $convenable, $moiyen)
     {
+        $allGroupWithTaux = null;
         //get total of groups that have taux convonabl and moiyen and faible and also achever
-        $ConMoiFaiARRAY = ["convenable" => 0, "faible" => 0, "moiyen" => 0, "con&moi" => 0];
+        $this->ConMoiFaiARRAY = ["convenable" => 0, "faible" => 0, "moiyen" => 0, "con&moi" => 0];
+        $this->moiyen = $moiyen;
+        $this->convenable = $convenable;
         $elements = [
             ["ele" => 40, "type" => "convenable"],
             ["ele" => 41, "type" => "moiyen"],
@@ -108,37 +188,73 @@ class OperationController extends Controller
         // WHERE annee_formation = 1 and code_filiere = "GC_GE_TS"
         // group by groupe
 
-
-        if ($code_filier == 'all' and $annee == 12) {
-            $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->groupBy("groupe")->get();
-        } elseif (in_array($code_filier,["all_a2","all_a1"])  and $annee != 12) {
-            $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->where("annee_formation", $annee)->groupBy("groupe")->get();
-        } else {
-            $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->groupBy("groupe")->get();
+        switch (true) {
+            case $code_filier == "all":
+                $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->groupBy("groupe")->get();
+                break;
+            case in_array($code_filier, ["all_a2", "all_a1"]):
+                $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->where("annee_formation", $annee)->groupBy("groupe")->get();
+                break;
+            default:
+                $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->groupBy("groupe")->get();
+                break;
         }
 
-        foreach ($allGroupWithTaux as $key) {
-            if ($key->taux >= $convenable) {
-                $ConMoiFaiARRAY["convenable"]++;
-            } elseif ($key->taux < $convenable && $key->taux >= $moiyen) {
-                $ConMoiFaiARRAY["moiyen"]++;
-            } else {
-                $ConMoiFaiARRAY["faible"]++;
+        // if ($code_filier == 'all' and $annee == 12) {
+        //     $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->groupBy("groupe")->get();
+        // } elseif (in_array($code_filier, ["all_a2", "all_a1"])  and $annee != 12) {
+        //     $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->where("annee_formation", $annee)->groupBy("groupe")->get();
+        // } else {
+        //     $allGroupWithTaux = DB::table("data_tables")->selectRaw("groupe,CEIL((sum(mh_realisee_globale) /sum(MH_Affectee_Globale_P_SYN))*100) as taux")->where("code_filiere", $code_filier)->where("annee_formation", $annee)->groupBy("groupe")->get();
+        // }
+
+        // -----------------------------------------
+
+
+        array_map(function ($key) {
+
+            switch (true) {
+                case $key->taux >=  $this->convenable:
+                    # code...
+                    $this->ConMoiFaiARRAY["convenable"]++;
+
+                    break;
+                case ($key->taux < $this->convenable && $key->taux >= $this->moiyen):
+                    $this->ConMoiFaiARRAY["moiyen"]++;
+                    break;
+                default:
+                    # code...
+                    $this->ConMoiFaiARRAY["faible"]++;
+
+                    break;
             }
-        }
-        $ConMoiFaiARRAY["con&moi"] = $ConMoiFaiARRAY["convenable"] + $ConMoiFaiARRAY["moiyen"];
+
+            // if ($key->taux >= $convenable) {
+            //     $ConMoiFaiARRAY["convenable"]++;
+            // } elseif ($key->taux < $convenable && $key->taux >= $moiyen) {
+            //     $ConMoiFaiARRAY["moiyen"]++;
+            // } else {
+            //     $ConMoiFaiARRAY["faible"]++;
+            // }
+
+        }, $allGroupWithTaux->toArray());
+
+
+
+        $this->ConMoiFaiARRAY["con&moi"] = $this->ConMoiFaiARRAY["convenable"] + $this->ConMoiFaiARRAY["moiyen"];
 
 
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
+
         foreach ($elements as $key) {
 
             $donne = Donnee::all()->where("filiere_id", $id_code_filier)->where("element_id", $key["ele"])->first();
 
-            if ($donne) {
-                $donne->value = $ConMoiFaiARRAY[$key["type"]];
+            if (isset($donne)) {
+                $donne->value = $this->ConMoiFaiARRAY[$key["type"]];
             } else {
                 $donne = new Donnee();
-                $donne->value = $ConMoiFaiARRAY[$key["type"]];
+                $donne->value = $this->ConMoiFaiARRAY[$key["type"]];
                 $donne->filiere_id = $id_code_filier;
                 $donne->element_id = $key["ele"];
             }
@@ -154,17 +270,34 @@ class OperationController extends Controller
         $eleid = 14;
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
 
-        if ($code_filier == 'all' and $annee == 12) {
-            $CountModule = DataTable::all()->count("module");
-        } elseif (in_array($code_filier,["all_a2","all_a1"])  and $annee != 12) {
-            $CountModule = DataTable::all()->where("annee_formation", $annee)->count("module");
-        } else {
-            $CountModule = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->count("module");
+        switch (true) {
+            case $code_filier == "all":
+                $CountModule = DataTable::all()->count("module");
+
+                break;
+
+            case in_array($code_filier, ["all_a2", "all_a1"]):
+                $CountModule = DataTable::all()->where("annee_formation", $annee)->count("module");
+
+                break;
+            default:
+                $CountModule = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->count("module");
+
+                break;
         }
+
+        // if ($code_filier == 'all' and $annee == 12) {
+        //     $CountModule = DataTable::all()->count("module");
+        // } elseif (in_array($code_filier, ["all_a2", "all_a1"])  and $annee != 12) {
+        //     $CountModule = DataTable::all()->where("annee_formation", $annee)->count("module");
+        // } else {
+        //     $CountModule = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->count("module");
+        // }
+        //---------------------------------------------------
 
         $donne = Donnee::all()->where("filiere_id", $id_code_filier)->where("element_id", $eleid)->first();
 
-        if ($donne) {
+        if (isset($donne)) {
             $donne->value = $CountModule;
         } else {
             $donne = new Donnee();
@@ -182,17 +315,34 @@ class OperationController extends Controller
         $eleid = 15;
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
 
-        if ($code_filier == 'all' and $annee == 12) {
-            $CountModuleAchever = DataTable::all()->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
-        } elseif (in_array($code_filier,["all_a2","all_a1"])  and $annee != 12) {
-            $CountModuleAchever = DataTable::all()->where("annee_formation", $annee)->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
-        } else {
-            $CountModuleAchever = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+        switch (true) {
+            case $code_filier == "all":
+                $CountModuleAchever = DataTable::all()->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+
+                break;
+
+            case in_array($code_filier, ["all_a2", "all_a1"]):
+                $CountModuleAchever = DataTable::all()->where("annee_formation", $annee)->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+
+                break;
+            default:
+                $CountModuleAchever = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+
+                break;
         }
 
+        // if ($code_filier == 'all' and $annee == 12) {
+        //     $CountModuleAchever = DataTable::all()->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+        // } elseif (in_array($code_filier, ["all_a2", "all_a1"])  and $annee != 12) {
+        //     $CountModuleAchever = DataTable::all()->where("annee_formation", $annee)->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+        // } else {
+        //     $CountModuleAchever = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Taux_Realisation_P_syn", ">=", 95)->count("module");
+        // }
+
+        // /-------------------------------------------------------------------
         $donne = Donnee::all()->where("filiere_id", $id_code_filier)->where("element_id", $eleid)->first();
 
-        if ($donne) {
+        if (isset($donne)) {
             $donne->value = $CountModuleAchever;
         } else {
             $donne = new Donnee();
@@ -221,25 +371,51 @@ class OperationController extends Controller
             ["id" => 18, "type" => "locales réalisées"],
             ["id" => 19, "type" => "régionales réalisées"]
         ];
+
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
+        $CountEFMLocalesPrevues = 0;
+        $CountEFMRegionalPrevues = 0;
+        $CountEFMLocalesréalisées = 0;
+        $CountEFMRegionalréalisées = 0;
+        
+        switch (true) {
+            case $code_filier == "all":
+                $CountEFMLocalesPrevues = DataTable::all()->where("Regional", "N")->where("Seance_EFM", "Non")->count();
+                $CountEFMRegionalPrevues = DataTable::all()->where("Regional", "O")->where("Seance_EFM", "Non")->count();
+                $CountEFMLocalesréalisées = DataTable::all()->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
+                $CountEFMRegionalréalisées = DataTable::all()->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+                break;
 
-
-        if ($code_filier == 'all' and $annee == 12) {
-            $CountEFMLocalesPrevues = DataTable::all()->where("Regional", "N")->where("Seance_EFM", "Non")->count();
-            $CountEFMRegionalPrevues = DataTable::all()->where("Regional", "O")->where("Seance_EFM", "Non")->count();
-            $CountEFMLocalesréalisées = DataTable::all()->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
-            $CountEFMRegionalréalisées = DataTable::all()->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
-        } elseif (in_array($code_filier,["all_a2","all_a1"])  and $annee != 12) {
-            $CountEFMLocalesPrevues = DataTable::all()->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Non")->count();
-            $CountEFMRegionalPrevues = DataTable::all()->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Non")->count();
-            $CountEFMLocalesréalisées = DataTable::all()->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
-            $CountEFMRegionalréalisées = DataTable::all()->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
-        } else {
-            $CountEFMLocalesPrevues = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Non")->count();
-            $CountEFMRegionalPrevues = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Non")->count();
-            $CountEFMLocalesréalisées = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
-            $CountEFMRegionalréalisées = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+            case in_array($code_filier, ["all_a2", "all_a1"]):
+                $CountEFMLocalesPrevues = DataTable::all()->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Non")->count();
+                $CountEFMRegionalPrevues = DataTable::all()->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Non")->count();
+                $CountEFMLocalesréalisées = DataTable::all()->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
+                $CountEFMRegionalréalisées = DataTable::all()->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+                break;
+            default:
+                $CountEFMLocalesPrevues = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Non")->count();
+                $CountEFMRegionalPrevues = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Non")->count();
+                $CountEFMLocalesréalisées = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
+                $CountEFMRegionalréalisées = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+                break;
         }
+
+        // if ($code_filier == 'all' and $annee == 12) {
+        //     $CountEFMLocalesPrevues = DataTable::all()->where("Regional", "N")->where("Seance_EFM", "Non")->count();
+        //     $CountEFMRegionalPrevues = DataTable::all()->where("Regional", "O")->where("Seance_EFM", "Non")->count();
+        //     $CountEFMLocalesréalisées = DataTable::all()->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
+        //     $CountEFMRegionalréalisées = DataTable::all()->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+        // } elseif (in_array($code_filier, ["all_a2", "all_a1"])  and $annee != 12) {
+        //     $CountEFMLocalesPrevues = DataTable::all()->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Non")->count();
+        //     $CountEFMRegionalPrevues = DataTable::all()->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Non")->count();
+        //     $CountEFMLocalesréalisées = DataTable::all()->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
+        //     $CountEFMRegionalréalisées = DataTable::all()->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+        // } else {
+        //     $CountEFMLocalesPrevues = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Non")->count();
+        //     $CountEFMRegionalPrevues = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Non")->count();
+        //     $CountEFMLocalesréalisées = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "N")->where("Seance_EFM", "Oui")->count();
+        //     $CountEFMRegionalréalisées = DataTable::all()->where("code_filiere", $code_filier)->where("annee_formation", $annee)->where("Regional", "O")->where("Seance_EFM", "Oui")->count();
+        // }
 
         $EFMArray["locales prévues"] = $CountEFMLocalesPrevues;
         $EFMArray["régionales prévues"] = $CountEFMRegionalPrevues;
@@ -262,11 +438,10 @@ class OperationController extends Controller
 
             $donne->save();
         }
-
-
     }
 
-    public function setDefaultValuesForOtherElements($code_filier, $annee){
+    public function setDefaultValuesForOtherElements($code_filier, $annee)
+    {
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
 
         $Non_avoided_elements = Element::where([
@@ -280,7 +455,7 @@ class OperationController extends Controller
                 ["filiere_id", "=", $id_code_filier],
                 ["element_id", "=", $element->id],
             ])->first();
-            
+
             if ($donne) {
                 $donne->value = 0;
             } else {
@@ -292,11 +467,11 @@ class OperationController extends Controller
 
             $donne->save();
         }
-
     }
 
 
-    public function setDefaultCommentForOtherElements($code_filier, $annee){
+    public function setDefaultCommentForOtherElements($code_filier, $annee)
+    {
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
 
         $elements = Element::all();
@@ -306,7 +481,7 @@ class OperationController extends Controller
                 ["filiere_id", "=", $id_code_filier],
                 ["element_id", "=", $element->id],
             ])->first();
-            
+
             if (!isset($comment)) {
                 $comment = new Comments();
                 $comment->filiere_id = $id_code_filier;
@@ -315,10 +490,5 @@ class OperationController extends Controller
                 $comment->save();
             }
         }
-
     }
-    
-
 }
-
-
