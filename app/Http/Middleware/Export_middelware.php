@@ -16,7 +16,12 @@ class Export_middelware
     public function handle(Request $request, Closure $next): Response
     {
         if (session("type")) {
-            return $next($request);
+            if(session("type") == "directeur"){
+                
+                return $next($request);
+            }else{
+                return redirect("/");
+            }
         } else {
             return redirect("login");
         }

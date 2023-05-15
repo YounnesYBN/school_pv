@@ -19,7 +19,7 @@ class uploadController extends Controller
     //
     public $moiyen ;
     public $convonable ;
-
+    
     public function Onupload(Request $request): string
     {
 
