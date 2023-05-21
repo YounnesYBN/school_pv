@@ -34,8 +34,8 @@ class User extends Authenticatable
     ];
 
 
-    public function aspeet(){
-       return $this->belongsToMany(Aspeet::class);
+    public function type(){
+       return $this->belongsTo(Type::class);
     }
 
 }

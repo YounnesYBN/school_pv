@@ -87,14 +87,14 @@ class uploadController extends Controller
             array_map(function($filier){
                 $operationOBJ = new OperationController();
                 
+                $operationOBJ->setDefaultValuesForOtherElements($filier["code_filiere"], $filier["annee"]);
+                $operationOBJ->setDefaultCommentForOtherElements($filier["code_filiere"], $filier["annee"]);
                 $operationOBJ->getNmbreTotalGroup($filier["code_filiere"], $filier["annee"]);
                 $operationOBJ->getNombreTotalGroupesValides($filier["code_filiere"], $filier["annee"]);
                 $operationOBJ->getNombreTotalGroupesTaux($filier["code_filiere"], $filier["annee"], $this->convonable, $this->moiyen);
                 $operationOBJ->getTotalModule($filier["code_filiere"], $filier["annee"]);
                 $operationOBJ->getTotalModuleAchever($filier["code_filiere"], $filier["annee"]);
                 $operationOBJ->getTotalEFM_local_regional($filier["code_filiere"], $filier["annee"]);
-                $operationOBJ->setDefaultValuesForOtherElements($filier["code_filiere"], $filier["annee"]);
-                $operationOBJ->setDefaultCommentForOtherElements($filier["code_filiere"], $filier["annee"]);
             },$allFilier);
             
             return redirect("/");

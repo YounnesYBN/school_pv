@@ -28,9 +28,9 @@ class UserController extends Controller
             $check = User::all()->where('email', $request->input("email"))->where("password", $request->password)->first();
 
             if ($check) {
-
+                // return dd();
                 session([
-                    "type" => $check->type,
+                    "type" => $check->type()->first()->type_name,
                     "id" => $check->id,
                     "email" => $check->email,
                 ]);

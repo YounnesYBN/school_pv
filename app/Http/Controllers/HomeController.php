@@ -19,8 +19,10 @@ class HomeController extends Controller
 
         $shoudCommentDisplay = false;
         // get all aspeet for the user depinding on his email and passwrod and we also get for each aspeets all it's elements 
-        $check = User::all()->where('email', session("email"))->where("type", session("type"))->first();
-        $Allaspeet = $check->aspeet()->get();
+        $check = User::all()->where('email', session("email"))->first();
+
+        $Allaspeet = $check->type()->first()->aspeet()->get();
+        // return dd($Allaspeet); 
 
         $aspeet_element_Array = array();
         foreach ($Allaspeet as $aspeet) {

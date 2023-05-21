@@ -12,8 +12,8 @@ class Aspeet extends Model
         "value",
     ];
 
-    public function user(){
-        return $this->belongsToMany(User::class);
+    public function type(){
+        return $this->belongsToMany(Type::class,"typs_aspeets");
     }
 
     public function element(){

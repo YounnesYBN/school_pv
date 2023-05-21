@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Aspeet;
 use App\Models\Type;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,11 +13,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('email')->unique();
-            $table->string('password');
+        Schema::create('typs_aspeets', function (Blueprint $table) {
             $table->foreignId("type_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId("aspeet_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('typs_aspeets');
     }
 };
