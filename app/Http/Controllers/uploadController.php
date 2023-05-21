@@ -32,7 +32,7 @@ class uploadController extends Controller
         Validator::validate(
             $input,
             [
-                "file_import" => ["required", "mimes:xlsx,xls"],
+                "file_import" => ["required"],
                 "moiyen" => ["required",],
                 "convenable" => ["required"],
             ],

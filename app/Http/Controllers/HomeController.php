@@ -56,7 +56,7 @@ class HomeController extends Controller
 
         $donnes = Donnee::all()->where("filiere_id", $filier->id);
         $comments = $filier->comment()->get();
-        
+
         //here we give for each element its donne and comment
 
 
@@ -85,8 +85,15 @@ class HomeController extends Controller
                 }
             }
         }
-    //    return dd($aspeet_element_Array[0]);
-        return view("home", ["data" => $aspeet_element_Array, "comment_display" => $shoudCommentDisplay]);
+
+
+        
+
+        
+        return view("home", [
+            "data" => $aspeet_element_Array,
+            "comment_display" => $shoudCommentDisplay,
+        ]);
     }
 
     public function SaveDonneChanges(Request $request)
@@ -188,12 +195,12 @@ class HomeController extends Controller
                 # code...
 
                 $donne = Donnee::where([
-                    ["element_id","=",$values2["id"]],
-                    ["filiere_id","=",$year->id]
-                    ])->first();
-                if($donne){
+                    ["element_id", "=", $values2["id"]],
+                    ["filiere_id", "=", $year->id]
+                ])->first();
+                if ($donne) {
                     $donne->value = $years[$year->code_filiere];
-                }else{
+                } else {
                     $donne = new Donnee();
                     $donne->element_id = $values2["id"];
                     $donne->filiere_id = $year->id;

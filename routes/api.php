@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UpdateController;
+use App\Models\Filiere;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //save changes
-Route::post("/saveChanges",[UpdateController::class,"SaveChanges"]);
+Route::post("/saveChanges", [UpdateController::class, "SaveChanges"]);
+
+//change year
+Route::get("/changeYear/{year}", function ($year) {
+
+    $data = Filiere::where("annee", $year)->orderByDesc('id')->get();
+
+    return response()->json([
+        "filiere" => $data
+    ]);
+});

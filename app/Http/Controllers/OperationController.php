@@ -27,15 +27,7 @@ class OperationController extends Controller
     public function getNmbreTotalGroup($code_filier, $annee)
     {
         $NmbreTotalGroup = 0;
-        //old code
-
-        // if ($code_filier == 'all' and $annee == 12) {
-        //     $NmbreTotalGroup = DataTable::distinct("groupe")->count();
-        // } elseif (in_array($code_filier, ["all_a2", "all_a1"]) and $annee != 12) {
-        //     $NmbreTotalGroup = DataTable::where("annee_formation", $annee)->distinct("groupe")->count();
-        // } else {
-        //     $NmbreTotalGroup = DataTable::where("code_filiere", $code_filier)->where("annee_formation", $annee)->distinct("groupe")->count();
-        // }
+        
 
         switch (true) {
             case $code_filier == "all":

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AspeetController;
+
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ElementController;
 use App\Http\Controllers\ExportController;
@@ -9,7 +9,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\uploadController;
 use App\Http\Controllers\UserController;
-use App\Models\DataExport;
 use App\Models\Export;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 //route home page
 Route::get('/', [HomeController::class, "GetDataAndDisplayIt"])->middleware("loginMiddleware")->name("home");
 Route::get("/saveHomechanges", [HomeController::class, "SaveDonneChanges"])->middleware("loginMiddleware")->name("saveHomeChanges");
+
 //route login page
 Route::get("/login", function () {
     return view("pages.login");
@@ -62,12 +62,12 @@ Route::get("/updateComment/{Comment}/{id}", [UpdateController::class, "updateCom
 Route::post("/Onupload", [uploadController::class, "Onupload"])->middleware("import_middleware")->name("Onupload");
 Route::get("/OnExport", [ExportController::class, "Export"])->middleware("export_middleware")->name("OnExport");
 
-Route::get("/Exports", function(){
+//history of all exports the user made
+Route::get("/Exports", function () {
     $allExports = Export::all();
     // dd($allExports);
-    return view("pages.exports",["data"=>$allExports]);
+    return view("pages.exports", ["data" => $allExports]);
 })->middleware("export_middleware")->name("exports");
 
-Route::get("Exports/delete/{id}",[ExportTableController::class,"deleteExport"])->middleware("export_middleware")->name("deleteExport");
-Route::get("Exports/export/{id}",[ExportTableController::class,"export"])->middleware("export_middleware")->name("ExportData");
-
+Route::get("Exports/delete/{id}", [ExportTableController::class, "deleteExport"])->middleware("export_middleware")->name("deleteExport");
+Route::get("Exports/export/{id}", [ExportTableController::class, "export"])->middleware("export_middleware")->name("ExportData");
