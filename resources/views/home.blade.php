@@ -1,24 +1,63 @@
-
-
 @include('layouts.header')
-<main class="flex flex-col items-center">
-    
-    <div class="w-full flex justify-center items-center h-72  rounded my-10">
+<main class="flex flex-col items-center h-fit">
 
-        <div class=" w-4/5 h-5/6  flex items-center justify-around gap-4">
+    <div class="w-full  flex-col justify-center items-center min-h-72 max-h-fit  rounded my-10">
+
+        <div class=" w-full min-h-5/6 max-h-fit flex flex-col items-center justify-center gap-10">
 
 
-            <form action="{{Route("home")}}" class="w-1/2 flex items-end  space-x-4" method="get">
+
+            @if (session("type")=="directeur")
+
+            <div class="h-fit w-full flex justify-around">
+                <div class="flex flex-col items-center justify-center mb-6 gap-6 w-2/5 p-4">
+                    <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">les donne :</h4>
+                    <div class="p-4  text-sm text-yellow-800 rounded-lg bg-yellow-50 w-3/4 " role="alert">
+                        <span class="font-medium">Alerte d'avertissement !</span> lors de l'importation d'un nouveau fichier, les anciennes données seront supprimées.
+                    </div>
+                    <button type="button" class="shadow-xl hover:shadow-md duration-100 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  focus:outline-none flex-grow-0 w-1/2"><a href="{{Route("upload")}}">importer un nouveau fichier</a></button>
+                    <button type="button" class="  text-blue-700    font-medium rounded-lg text-sm px-5 py-2.5   focus:outline-none flex-grow-0 w-1/2"><a href="{{Route('exports')}}">toutes les exportations</a></button>
+                </div>
                 
+                <div id="alert-additional-content-1" class=" w-2/5 p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50" role="alert">
+                    <div class="flex items-center">
+                        <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">Comptes et Filieres :</h4>
+
+                    </div>
+                    <div class="mt-2 mb-4 text-lg">
+                        <span class="font-medium">Alerte d'avertissement !</span> tous les comptes et filiere seront supprimés et recréés en fonction du fichier que vous avez importé
+                    </div>
+                    <div class="flex items-center justify-around h-1/2 ">
+                        <button type="button" class="text-sm font-medium text-gray-900 focus:outline-none bg-white  px-5 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 flex-grow-0 w-fit">
+                            <a class="flex gap-3 items-center" href="{{Route("accountes")}}">gérer les comptes
+                                <svg fill="none" stroke="currentColor" class="w-6" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                                </svg>
+                                et les filiere 
+                                <svg fill="none" stroke="currentColor" class="w-6" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"></path>
+                                </svg>
+                            </a>
+                        </button>
+                        
+
+                    </div>
+                </div>
+
+            </div>
+            @endif
+            @if ($IsFiliereExistes)
+            <form action="{{Route("home")}}" class="w-1/2 flex items-end  space-x-4" method="get">
+
                 @csrf
                 <div>
                     <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">l'année :</label>
                     <select id="selectYear" class="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-green-500 focus:border-green-500 block w-26 text-center py-2.5 px-5 outline-none" name="selectYear">
-                        <option id="year12" value="12"  >1A & 2A</option>
-                        <option id="year1" value="1" >1A</option>
-                        <option id="year2" value="2" >2A</option>
+                        <option id="year12" value="12">1A & 2A</option>
+                        <option id="year1" value="1">1A</option>
+                        <option id="year2" value="2">2A</option>
                     </select>
-                    
+
                 </div>
                 <div id="filiere_con">
                     <label class="block mb-2 text-sm font-medium text-gray-900">filière :</label>
@@ -28,8 +67,8 @@
                 </div>
                 <div id="loading_con" class="hidden w-56 text-center">
                     <svg aria-hidden="true" class="inline w-10 h-10 mr-2 text-gray-200 animate-spin  fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
+                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill" />
                     </svg>
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -39,23 +78,14 @@
 
 
             </form>
-
-            @if (session("type")=="directeur")
-
-            <div class="h-full w-2/5 flex flex-col items-center justify-center gap-6 shadow-md rounded-md">
-                <div class="p-4  text-sm text-yellow-800 rounded-lg bg-yellow-50 w-3/4 " role="alert">
-                    <span class="font-medium">Alerte d'avertissement !</span> lors de l'importation d'un nouveau fichier, les anciennes données seront supprimées.
-                </div>
-                <button type="button" class="shadow-xl hover:shadow-md duration-100 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  focus:outline-none flex-grow-0 w-1/2"><a href="{{Route("upload")}}">importer un nouveau fichier</a></button>
-                <button type="button" class="  text-blue-700    font-medium rounded-lg text-sm px-5 py-2.5   focus:outline-none flex-grow-0 w-1/2"><a href="{{Route('exports')}}">toutes les exportations</a></button>
-
-            </div>
             @endif
         </div>
     </div>
 
-
-    <div id="alert-border-3" class="flex items-center p-4 mt-20 text-green-800 border-t-4 border-green-300 bg-green-50 w-1/4 rounded-md mb-24 md:w-1/3" role="alert">
+    @if ($IsFiliereExistes)
+        
+    
+    <div id="alert-border-3" class="flex items-center p-4 mt-4 text-green-800 border-t-4 border-green-300 bg-green-50 w-1/4 rounded-md mb-24 md:w-1/3" role="alert">
         <svg class="flex-shrink-0 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
         </svg>
@@ -68,7 +98,7 @@
             <p class=" text-lg"> Année<span class="font-light p-1 text-green-300 italic ml-1 mr-3">{{session("selected_year")}}A</span> Filiere <span class="font-light p-1 text-green-300 italic ml-1">{{session("selected_filier") == "all_a1" || session("selected_filier") == "all_a2" ? "Toute" : session("selected_filier") }}</span> </p>
             @endif
             @else
-
+            
             <p class=" text-lg"> Année<span class="font-light p-1 text-green-300 italic ml-1 mr-3">Toute</span> Filiere <span class="font-light p-1 text-green-300 italic ml-1">Toute</span> </p>
 
             @endif
@@ -76,9 +106,9 @@
         </div>
 
     </div>
-
+    
     <!-- ////////////////////////// -->
-
+    
     <?php $x = false ?>
     <form action="{{Route("saveHomeChanges")}}" class="relative overflow-x-auto shadow-lg sm:rounded-lg p-6 w-3/4 flex flex-col items-center" method="get">
         @csrf
@@ -88,25 +118,25 @@
                     <th class="px-6 py-6 w-1/5 text-center">Aspeets à Trailer</th>
                     <th class="{{$comment_display ? " px-6 py-6 w-4/12  text-center" : "px-6 py-6 w-3/5 text-center" }}">Eléments de traitement</th>
                     <th class="px-6 py-6 text-center w-36">les données</th>
-
+                    
                     @if ($comment_display)
                     <th class="px-6 py-6 text-center">commentaires</th>
                     @endif
-
+                    
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $aspeet_element)
                 <tr class="">
                     <td class="{{ $x ? "border-b bg-gray-50 text-lg px-6 py-6" : "text-lg px-6 py-6" }}" rowspan="
-                        {{count($aspeet_element["elements"])+1}}
+                    {{count($aspeet_element["elements"])+1}}
                     ">
-
-                        {{$aspeet_element["aspeet"]->value}}
-                    </td>
-                </tr>
-                <?php $endOfAspeet = 0; ?>
-
+                    
+                    {{$aspeet_element["aspeet"]->value}}
+                </td>
+            </tr>
+            <?php $endOfAspeet = 0; ?>
+            
                 @foreach ($aspeet_element["elements"] as $element)
 
                 <?php $endOfAspeet++; ?>
@@ -115,26 +145,26 @@
                     <td class=" px-6 py-4 text-md border-b">{{$element->name}}</td>
                     <td>
                         <div class="px-6 py-6 flex justify-center items-center">
-
+                            
                             @if ($element->type_comment != "select")
-
+                            
                             <input type="number" id="first_name" name="{{$element->id}}" value="{{$element->donne? $element->donne->value: " "}}" class="w-full text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5">
                             @endif
-
+                            
                         </div>
-
+                        
                     </td>
-
+                    
                     @if ($comment_display)
                     <td class=" h-32 flex items-center justify-center gap-2 p-2  border-b">
                         <div class="h-4/5 w-4/5 pl-2 pt-2 pr-2 overflow-y-auto" id="comment_COM">
                             <ol>
-
+                                
                                 <?php $comments_json = $element->comment ? json_decode($element->comment->value) : []; ?>
-
+                                
                                 @foreach ( $comments_json as $valueCom)
                                 @if ($valueCom->active)
-
+                                
                                 <li class="italic text-slate-600/75 space break-words text-md font-medium m-2 flex">
                                     <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
@@ -143,9 +173,9 @@
                                 </li>
                                 @endif
                                 @endforeach
-
+                                
                             </ol>
-
+                            
                         </div>
                         <button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 ">
                             <a href="{{Route("show",$element)}}">
@@ -162,26 +192,29 @@
                 @endforeach
             </tbody>
         </table>
-
+        
         <div class="flex justify-center items-center gap-10 mt-8">
             <button type="submit" id="save-button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ">Sauvegarder les modifications</button>
             @if (session("type")=="directeur")
             <button type="button" class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"><a href="{{Route("OnExport")}}" id="download_file_button">Télécharger le fichier excel de Toute les filiéres</a></button>
             @endif
         </div>
-
+        
     </form>
-
-
+    
+    @else
+    <blockquote class="text-xl italic font-semibold text-gray-900">
+        <svg aria-hidden="true" class="w-10 h-10 text-gray-400 dark:text-gray-600" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" fill="currentColor"/></svg>
+        <p>"importez le fichier pour créer d'abord des filieres, puis des données ."</p>
+    </blockquote>
+    @endif
+    
 </main>
 <script>
-    
-    
-    
     document.getElementById('save-button').addEventListener("click", (e) => {
 
         var ele = e.target;
-
+        
         ele.innerHTML = `
         
         Chargement... <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -192,22 +225,22 @@
         `;
 
     })
-
+    
     document.getElementById('download_file_button').addEventListener("click", (e) => {
-
+        
         var ele = e.target;
         ele.innerHTML = `
-
-S'il vous plaît, attendez... <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-gray-900 hover:text-blue-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-</svg>
-
-`;
-
-        setTimeout(() => {
-            console.log("hii");
-            ele.innerHTML = "Télécharger le fichier excel de Toute les filiéres"
-        }, 17 * 1000);
-    })
-</script>
+        
+        S'il vous plaît, attendez... <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-gray-900 hover:text-blue-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+            <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+            </svg>
+            
+            `;
+            
+            setTimeout(() => {
+                console.log("hii");
+                ele.innerHTML = "Télécharger le fichier excel de Toute les filiéres"
+            }, 17 * 1000);
+        })
+    </script>

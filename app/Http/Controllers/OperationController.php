@@ -404,11 +404,7 @@ class OperationController extends Controller
     {
         $id_code_filier = Filiere::all()->where("code_filiere", $code_filier)->where("annee", $annee)->first()->id;
 
-        // $Non_avoided_elements = Element::where([
-        //     ["type_comment", "!=", "select"]
-        // ])->WhereNotIn("id", [
-        //     1, 2, 14, 15, 16, 17, 18, 19, 39, 40, 41, 42, 43
-        // ])->get();
+        
         $allElement = Element::all();
 
 

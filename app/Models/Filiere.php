@@ -23,4 +23,7 @@ class Filiere extends Model
     public function comment(){
         return $this->hasMany(Comments::class);
     }
+    public function group(){
+        return $this->hasMany(Group::class);
+    }
 }

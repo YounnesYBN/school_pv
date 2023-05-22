@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class Export_middelware
+class FormateurMiddlware
 {
     /**
      * Handle an incoming request.
@@ -15,15 +15,6 @@ class Export_middelware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (session("type")) {
-            if(session("type") == "directeur"){
-                
-                return $next($request);
-            }else{
-                return redirect("/");
-            }
-        } else {
-            return redirect("login");
-        }
+        return $next($request);
     }
 }

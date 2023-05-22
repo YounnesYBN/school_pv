@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataTable;
 use App\Models\Donnee;
 use App\Models\Element;
 use App\Models\Filiere;
@@ -20,7 +21,7 @@ class HomeController extends Controller
         $shoudCommentDisplay = false;
         // get all aspeet for the user depinding on his email and passwrod and we also get for each aspeets all it's elements 
         $check = User::all()->where('email', session("email"))->first();
-
+        
         $Allaspeet = $check->type()->first()->aspeet()->get();
         // return dd($Allaspeet); 
 
@@ -55,7 +56,11 @@ class HomeController extends Controller
             }
         }
 
-
+        if(!$filier || DataTable::all()->count()==0){
+            return  view("home", [
+                "IsFiliereExistes" =>false
+            ]);
+        }
         $donnes = Donnee::all()->where("filiere_id", $filier->id);
         $comments = $filier->comment()->get();
 
@@ -93,6 +98,7 @@ class HomeController extends Controller
 
         
         return view("home", [
+            "IsFiliereExistes" =>true,
             "data" => $aspeet_element_Array,
             "comment_display" => $shoudCommentDisplay,
         ]);

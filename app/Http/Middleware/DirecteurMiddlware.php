@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class uploadMiddelware
+class DirecteurMiddlware
 {
     /**
      * Handle an incoming request.
@@ -25,5 +25,6 @@ class uploadMiddelware
         }else{
             return redirect("/login");
         }
+        
     }
 }

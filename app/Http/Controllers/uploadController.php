@@ -1,10 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Http\Requests\storeFileRequest;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\File;
 
 use App\Http\Controllers\OperationController;
 use Illuminate\Http\Request;
@@ -22,6 +19,7 @@ class uploadController extends Controller
     
     public function Onupload(Request $request): string
     {
+        set_time_limit(120);
 
         $input = [
             "file_import" => $request->file_import,
@@ -56,6 +54,9 @@ class uploadController extends Controller
         if ($request->convenable < $request->moiyen) {
             return back()->with("error", "convenable devrait être plus grand que moyenne");
         }
+        if(Filiere::all()->count() == 0){
+            return back()->with("error", "créer d'abord des filieres");
+        }
 
         if (DataTable::all()->first()) {
             
@@ -75,6 +76,7 @@ class uploadController extends Controller
                 Groupe,
                 Régional,
                 Séance EFM,
+                filière,
                 MH Affectée Globale (P & SYN)
             )");
         }

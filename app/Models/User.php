@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        "type_id"
     ];
 
     /**
@@ -36,6 +37,10 @@ class User extends Authenticatable
 
     public function type(){
        return $this->belongsTo(Type::class);
+    }
+
+    public function group(){
+        return $this->belongsToMany(Group::class,"user_groups");
     }
 
 }
