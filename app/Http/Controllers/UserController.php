@@ -25,23 +25,38 @@ class UserController extends Controller
         try {
             //code...
             //throw $th;
-            $check = User::all()->where('email', $request->input("email"))->where("password", $request->password)->first();
+            $user = User::all()->where('email', $request->input("email"))->where("password", $request->password)->first();
 
-            if ($check) {
-                // return dd();
-                session([
-                    "type" => $check->type()->first()->type_name,
-                    "id" => $check->id,
-                    "email" => $check->email,
-                ]);
+            if ($user) {
+                $type = $user->type()->first()->type_name;
+                if ($type == "directeur") {
+                    session([
+                        "type" => $user->type()->first()->type_name,
+                        "id" => $user->id,
+                        "email" => $user->email,
+                    ]);
+                    return redirect("/");
+                } elseif ($type == "formateur") {
+                    if($user->active == true){
+                        session([
+                            "type" => $user->type()->first()->type_name,
+                            "id" => $user->id,
+                            "email" => $user->email,
+                        ]);
+                        return redirect("/FormateurHome");
+                    }else{
+                        return back()->with("error", "la connexion a échoué, votre compte est désactivé");
+                    }
+                }
 
-                return redirect("/");
+
+                
             } else {
                 return back()->with("error", "la connexion a échoué, les informations ne sont pas correctes");
             }
         } catch (\Throwable $th) {
 
-            return back()->with("error","quelque chose s'est mal passé");
+            return back()->with("error", "quelque chose s'est mal passé");
         }
     }
 

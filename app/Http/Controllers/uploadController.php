@@ -19,7 +19,7 @@ class uploadController extends Controller
     
     public function Onupload(Request $request): string
     {
-        set_time_limit(120);
+        set_time_limit(300);
 
         $input = [
             "file_import" => $request->file_import,

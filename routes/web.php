@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 //route home page
-Route::get('/', [HomeController::class, "GetDataAndDisplayIt"])->middleware("loginMiddleware")->name("home");
+Route::get('/', [HomeController::class, "GetDataAndDisplayIt"])->middleware("directeur_middleware")->name("home");
 Route::get("/saveHomechanges", [HomeController::class, "SaveDonneChanges"])->middleware("directeur_middleware")->name("saveHomeChanges");
 //route login page
 Route::get("/login", function () {
@@ -72,6 +72,11 @@ Route::get("Exports/export/{id}", [ExportTableController::class, "export"])->mid
 //accounts
 Route::get("Accountes", [AccountesController::class, "AccounteIndex"])->middleware("directeur_middleware")->name("accountes");
 Route::post("OnUploadAccounts&Filiere", [AccountesController::class, "OnUpload"])->middleware("directeur_middleware")->name("uploadAccount&filiere");
+Route::get("deleteFormateur/{id}",[AccountesController::class,"deleteFormateur"])->middleware("directeur_middleware")->name("deleteFormateur");
+Route::get("activeFormateur/{id}",[AccountesController::class,"ActiveFormateur"])->middleware("directeur_middleware")->name("activeFormateur");
+Route::get("disactiveFormateur/{id}",[AccountesController::class,"DisActiveFormateur"])->middleware("directeur_middleware")->name("disactiveFormateur");
+Route::get("disactiveAll",[AccountesController::class,"DisactiveAll"])->middleware("directeur_middleware")->name("disactiveAllFormateur");
+Route::get("activeAll",[AccountesController::class,"ActiveAll"])->middleware("directeur_middleware")->name("activeAllFormateur");
 
 Route::get("FormateurHome",function(){ 
     return view("pages.formateurHome");

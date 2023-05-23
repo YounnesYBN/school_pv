@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Imports\AccountFiliereImport;
 use App\Models\AccouteFiliereData;
-use App\Models\DataTable;
 use App\Models\Filiere;
 use App\Models\Group;
 use App\Models\Type;
@@ -15,32 +14,65 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
+
 class AccountesController extends Controller
 {
     //
 
     public function AccounteIndex(Request $request)
     {
-        $formateur_type = Type::where("type_name","formateur")->first();
-        $allFormateur = [];
-        if($request->search){
 
-        }else{
-            $allFormateur = User::where("type_id",$formateur_type->id)->get();
+        $formateur_type = Type::where("type_name", "formateur")->first();
+        $allFormateurCount = User::where("type_id", $formateur_type->id)->count();
+        $data = ["count"=>$allFormateurCount];
+        
+        if ($request->search && strlen($request->search) > 0) {
+            $allFormateur = DB::table("users")->select(["id", "email", "active", "type_id"])
+                ->whereRaw("email like '%{$request->search}%'")
+                ->where("type_id", $formateur_type->id)
+                ->get();
+            $data["data"] = $allFormateur;
+            $data["search"] = $request->search;
+        } else {
+            $allFormateur = User::where("type_id", $formateur_type->id)->get();
+            $data["data"] = $allFormateur;
         }
-        
-        
-        return view("pages.Accounts&filieres",["data"=>$allFormateur]);
+
+
+        return view("pages.Accounts&filieres", $data);
     }
 
-    public function deleteFormateur($id){
+    public function deleteFormateur($id)
+    {
+        $user = User::find($id);
+        $type = $user->type()->first()->type_name;
+        if ($type == "formateur") {
+            User::where("id", $id)->delete();
+        }
 
+        return back();
     }
-    public function DisActiveFormateur($id){
+    public function DisActiveFormateur($id)
+    {
+        $user = User::find($id);
+        $type = $user->type()->first()->type_name;
+        if ($type == "formateur") {
+            $user->active = false;
+            $user->save();
+        }
 
+        return back();
     }
-    public function ActiveFormateur($id){
-        
+    public function ActiveFormateur($id)
+    {
+        $user = User::find($id);
+        $type = $user->type()->first()->type_name;
+        if ($type == "formateur") {
+            $user->active = true;
+            $user->save();
+        }
+
+        return back();
     }
     public function OnUpload(Request $request)
     {
@@ -124,7 +156,6 @@ class AccountesController extends Controller
 
 
             DB::commit();
-            
         } catch (\Throwable $th) {
             DB::rollBack();
             // throw $th;
@@ -134,7 +165,7 @@ class AccountesController extends Controller
         try {
             //when this code  runs it create users of type formateur and give foreach user his groups 
             DB::beginTransaction();
-            User::where("type_id",Type::where("type_name", "formateur")->first()->id)->delete();
+            User::where("type_id", Type::where("type_name", "formateur")->first()->id)->delete();
             $AllGroups = Group::get()->toArray();
             array_map(function ($group) {
                 $group = Group::find($group["id"]);
@@ -145,7 +176,7 @@ class AccountesController extends Controller
                         $groupOBJ = Group::where("name", $formateur->group)->first();
                         $formateurType = Type::where("type_name", "formateur")->first();
 
-                         
+
                         $user = User::where([
                             ["email", "=", $formateur->formateur],
                             ["password", "=", $formateur->formateur],
@@ -161,8 +192,8 @@ class AccountesController extends Controller
                         } else {
 
                             $user =  new User([
-                                "email" => $formateur->formateur,
-                                "password" => $formateur->formateur,
+                                "email" => strtolower($formateur->formateur),
+                                "password" => strtolower($formateur->formateur),
                                 "type_id" => $formateurType->id,
                             ]);
                             $groupOBJ->user()->save($user);
@@ -180,5 +211,21 @@ class AccountesController extends Controller
         }
 
         return redirect("/");
+    }
+    public function DisactiveAll()
+    {
+        $type = Type::where("type_name", "formateur")->first();
+        User::where("type_id", $type->id)->update([
+            "active" => false
+        ]);
+        return back();
+    }
+    public function ActiveAll()
+    {
+        $type = Type::where("type_name", "formateur")->first();
+        User::where("type_id", $type->id)->update([
+            "active" => true
+        ]);
+        return back();
     }
 }
