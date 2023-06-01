@@ -24,8 +24,8 @@ class AccountesController extends Controller
 
         $formateur_type = Type::where("type_name", "formateur")->first();
         $allFormateurCount = User::where("type_id", $formateur_type->id)->count();
-        $data = ["count"=>$allFormateurCount];
-        
+        $data = ["count" => $allFormateurCount];
+
         if ($request->search && strlen($request->search) > 0) {
             $allFormateur = DB::table("users")->select(["id", "email", "active", "type_id"])
                 ->whereRaw("email like '%{$request->search}%'")
@@ -131,7 +131,10 @@ class AccountesController extends Controller
                     $filiereOBJ->save();
                 }
 
-                $allGroupFiliere = DB::table("accoute_filiere_data")->select(DB::raw("DISTINCT(filiere_code),`group`"))->where("filiere_code", $filiere->filiere_code)->get()->toArray();
+                $allGroupFiliere = DB::table("accoute_filiere_data")->select(DB::raw("DISTINCT(filiere_code),`group`"))->where([
+                    ["filiere_code", "=", $filiere->filiere_code],
+                    ["year", "=", $filiere->year]
+                ])->get()->toArray();
                 $allGroupFiliereOBJ = array_map(function ($group) {
                     $groupOBJ = new Group();
                     $groupOBJ->name = $group->group;

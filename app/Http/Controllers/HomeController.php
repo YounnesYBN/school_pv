@@ -117,8 +117,6 @@ class HomeController extends Controller
 
         $avoided_elements = Element::where([
             ["type_comment", "=", "select"]
-        ])->orWhereIn("id", [
-            1, 2, 14, 15, 16, 17, 18, 19, 39, 40, 41, 42, 43
         ])->get();
 
         $Non_avoided_elements = array();

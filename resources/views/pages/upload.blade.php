@@ -119,3 +119,5 @@
         document.getElementById("file_name").innerText = e.target.files[0].name;
     })
 </script>
+
+@include("layouts.footer")

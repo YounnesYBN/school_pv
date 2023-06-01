@@ -1,8 +1,7 @@
 import axios from "axios";
 import "./bootstrap";
-import { data } from "autoprefixer";
 
-document.onload = () => {};
+
 
 document.getElementById("selectYear").addEventListener("change", (e) => {
     var innerHtmlVlue = "";

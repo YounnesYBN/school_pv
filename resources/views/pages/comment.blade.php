@@ -190,3 +190,4 @@ S'il vous plaît, attendez... <svg aria-hidden="true" role="status" class="inlin
         })
     })
 </script>
+@include("layouts.footer")

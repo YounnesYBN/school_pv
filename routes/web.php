@@ -5,6 +5,7 @@ use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ElementController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ExportTableController;
+use App\Http\Controllers\FormateurCommentController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\uploadController;
@@ -21,6 +22,7 @@ use App\Models\UserGroup;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FormateurHomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +80,19 @@ Route::get("disactiveFormateur/{id}",[AccountesController::class,"DisActiveForma
 Route::get("disactiveAll",[AccountesController::class,"DisactiveAll"])->middleware("directeur_middleware")->name("disactiveAllFormateur");
 Route::get("activeAll",[AccountesController::class,"ActiveAll"])->middleware("directeur_middleware")->name("activeAllFormateur");
 
-Route::get("FormateurHome",function(){ 
-    return view("pages.formateurHome");
-})->middleware("loginMiddleware")->name("formateurHome");
+
+//formateur----------------------------------------------------------------------------------------------------
+Route::get("FormateurHome",[FormateurHomeController::class,"GetDataAndDisplayIt"])->middleware("loginMiddleware")->name("formateurHome");
+Route::get("FormateurComment/{group}/{element}/{filiere}",[FormateurCommentController::class,"GetCommentAndDisplay"])->middleware("loginMiddleware")->name("FormateurComment");
+Route::post("AddCommentFormateur/{group}/{element}/{filiere}",[FormateurCommentController::class,"AddComment"])->middleware("loginMiddleware")->name("FormateurCommentAdd");
+Route::get("DeleteCommentFormateur/{comment}/{id}",[FormateurCommentController::class,"DeleteComment"])->middleware("loginMiddleware")->name("FormateurCommentDelete");
+Route::post("UpdateCommentFormateur/{comment}/{id}",[FormateurCommentController::class,"UpdateComment"])->middleware("loginMiddleware")->name("FormateurCommentUpdate");
+
+Route::get("/GetGroups/{filiere}",function($filiere){
+    $user = User::where("email",session("email"))->first();
+    // $groups = $user->group()->get();
+    $groups = $user->group()->where("filiere_id",Filiere::where("code_filiere",$filiere)->first()->id)->get();
+    return response()->json([
+        "data"=>$groups
+    ]);
+});

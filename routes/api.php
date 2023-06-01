@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UpdateController;
 use App\Models\Filiere;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,3 +33,7 @@ Route::get("/changeYear/{year}", function ($year) {
         "filiere" => $data
     ]);
 });
+
+
+
+
