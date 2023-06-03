@@ -110,14 +110,14 @@
     <!-- ////////////////////////// -->
 
     <?php $x = false ?>
-    <form action="{{Route("saveHomeChanges")}}" class="relative overflow-x-auto shadow-lg sm:rounded-lg p-6 w-3/4 flex flex-col items-center" method="get">
+    <form action="{{Route("saveHomeChanges")}}" class="relative overflow-x-auto shadow-lg sm:rounded-lg p-6 w-full flex flex-col items-center" method="get">
         @csrf
         <table class="w-full text-sm text-left text-gray-500 ">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 rounded-lg">
                 <tr>
-                    <th class="px-6 py-6 w-1/5 text-center">Aspeets à Trailer</th>
-                    <th class="{{$comment_display ? " px-6 py-6 w-4/12  text-center" : "px-6 py-6 w-3/5 text-center" }}">Eléments de traitement</th>
-                    <th class="px-6 py-6 text-center w-36">les données</th>
+                    <th class="{{$comment_display ? "px-6 py-6 w-1/5 text-center" : "px-6 py-6 w-[35%] text-center" }}">Aspeets à Trailer</th>
+                    <th class="{{$comment_display ? " px-6 py-6 w-[25%]  text-center" : "px-6 py-6 w-[50%] text-center" }}">Eléments de traitement</th>
+                    <th class="{{$comment_display ? "px-6 py-6 text-center w-[20px]":"px-6 py-6 text-center w-[30px]"}}">les données</th>
 
                     @if ($comment_display)
                     <th class="px-6 py-6 text-center">commentaires</th>
@@ -142,9 +142,9 @@
                 <?php $endOfAspeet++; ?>
 
                 <tr class="{{count($aspeet_element["elements"]) == $endOfAspeet ? " border-b" : " " }}">
-                    <td class=" px-6 py-4 text-md border-b">{{$element->name}}</td>
+                    <td class=" px-1 py-4 text-md border-b">{{$element->name}}</td>
                     <td>
-                        <div class="px-6 py-6 flex justify-center items-center">
+                        <div class="px-1 py-6 flex justify-center items-center">
 
                             @if ($element->type_comment != "select")
 
@@ -156,34 +156,39 @@
                     </td>
 
                     @if ($comment_display)
-                    <td class=" h-32 flex items-center justify-center gap-2 p-2  border-b">
-                        <div class="h-4/5 w-4/5 pl-2 pt-2 pr-2 overflow-y-auto" id="comment_COM">
-                            <ol>
+                    <td class=" min-h-[120px] max-h-fit flex items-center justify-center gap-2   border-b">
+                        <div class="min-h-full max-h-fit w-[90%] pl-2 pt-2 pr-2  " id="comment_COM">
+                            <ul class="">
 
                                 <?php $comments_json = $element->comment ? json_decode($element->comment->value) : []; ?>
 
                                 @foreach ( $comments_json as $valueCom)
                                 @if ($valueCom->active)
 
-                                <li class="italic text-slate-600/75 space break-words text-md font-medium m-2 flex">
-                                    <svg class="flex-shrink-0 w-5 h-5 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    {{$valueCom->value}}
+                                <li class="italic  w-fit text-slate-600/75 space break-words text-md font-medium m-2 flex items-center">
+                                    
+                                   <p class="w-fit">
+                                    @if (isset($valueCom->group))
+                                    <span class="inline-flex items-center justify-center h-fit  p-1.5 text-xs font-semibold text-blue-800 bg-blue-200 rounded-[5px]">
+                                        {{$valueCom->group}}
+                                    </span>
+                                    @endif
+                                    <span class="font-semibold text-gray-900 mx-1 ">{{isset($valueCom->formateur)?$valueCom->formateur: "Toi" }} :</span> "{{$valueCom->value}}"
+                                    </p> 
                                 </li>
                                 @endif
                                 @endforeach
 
-                            </ol>
+                            </ul>
 
                         </div>
-                        <button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 ">
-                            <a href="{{Route("show",$element)}}">
-                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path clip-rule="evenodd" fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 00-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 00-1.85-1.567h-1.843zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z"></path>
-                                </svg>
-                            </a>
-                        </button>
+
+                        <a href="{{Route("show",$element)}}">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path clip-rule="evenodd" fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 00-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 00-2.282.819l-.922 1.597a1.875 1.875 0 00.432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 000 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 00-.432 2.385l.922 1.597a1.875 1.875 0 002.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 002.28-.819l.923-1.597a1.875 1.875 0 00-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 000-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 00-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 00-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 00-1.85-1.567h-1.843zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z"></path>
+                            </svg>
+                        </a>
+
                     </td>
                     @endif
                 </tr>

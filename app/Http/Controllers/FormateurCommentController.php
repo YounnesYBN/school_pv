@@ -129,13 +129,11 @@ class FormateurCommentController extends Controller
                 $DirCommentObj->save();
             }
             DB::commit();
-            return redirect()->back()->with("success","commentaire ajouté avec succès");
+            return redirect()->back()->with("success", "commentaire ajouté avec succès");
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with("error","quelque chose s'est mal passé($th)");
+            return back()->with("error", "quelque chose s'est mal passé($th)");
         }
-
-        
     }
 
     public function DeleteComment(FormateurDonneeComment $comment, $Id)
@@ -171,19 +169,92 @@ class FormateurCommentController extends Controller
                 $commentDirecteur->save();
             }
             DB::commit();
-            return redirect()->back()->with("success","commentaire supprimé avec succès");
+            return redirect()->back()->with("success", "commentaire supprimé avec succès");
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return back()->with("error","quelque chose s'est mal passé ($th)");
+            return back()->with("error", "quelque chose s'est mal passé ($th)");
         }
     }
 
-    public function UpdateComment(Request $request,FormateurDonneeComment $comment, $id)
+    public function UpdateComment(Request $request, FormateurDonneeComment $comment, $id)
     {
-        $isActive = isset($request->comment_checked)?($request->comment_checked==true?true:false):false;
-        
-        return dd($request->all(),$id,$comment);
+        try {
+            //code...
+            DB::beginTransaction();
+            $isActive = isset($request->comment_checked) ? ($request->comment_checked == true ? true : false) : false;
+            $newcomment = null;
 
+            //change comment for formateur
+            $newdata = [];
+            foreach (json_decode($comment->comments, true) as $value) {
+                if ($value["origin_id"] == $id) {
+                    $value["active"] = $isActive;
+                    $value["value"] = $request->comment_display_input;
+                    $newdata[] = $value;
+                    $newcomment = $value;
+                } else {
+
+                    $newdata[] = $value;
+                }
+            }
+            $comment->comments = json_encode($newdata);
+            $comment->save();
+
+            //now for directeur
+            if ($isActive) {
+                //on active we check if formateur is updated only comment or both
+
+                $commentDirObj = Comments::where([["filiere_id", "=", $comment->filiere_id], ["element_id", "=", $comment->element_id]])->first();
+                $allcomments = json_decode($commentDirObj->value);
+                $isExist = false;
+                foreach ($allcomments as $ele) {
+                    if (isset($ele->origin_id) && $ele->origin_id == $id) {
+                        $isExist = true;
+                    }
+                }
+                if ($isExist) {
+                    //here already exists only update value
+                    foreach ($allcomments as $ele) {
+                        if (isset($ele->origin_id) && $ele->origin_id == $id) {
+                            $ele->value = $request->comment_display_input;
+
+                        }
+                    }
+                    
+
+                } else {
+                    //here that comment is not exsist but existes on fromateur but was unactive but it active so make new one for directeur  
+
+                    $newcomment["id"] = $this->GetMaxIdDirecteurComment($allcomments) + 1;
+                    $allcomments[] = $newcomment;
+                }
+
+                //save changes
+                $commentDirObj->value  = json_encode($allcomments);
+                $commentDirObj->save();
+            } else {
+                //on disactive we delete it from directeur comments
+                $commentDirObj = Comments::where([["filiere_id", "=", $comment->filiere_id], ["element_id", "=", $comment->element_id]])->first();
+                $newcommentDir = [];
+                foreach (json_decode($commentDirObj->value, true) as $value) {
+                    if (isset($value["origin_id"])) {
+                        if ($value["origin_id"] != $id) {
+                            $newcommentDir[] = $value;
+                        }
+                    } else {
+                        $newcommentDir[] = $value;
+                    }
+                }
+                $commentDirObj->value = json_encode($newcommentDir);
+                $commentDirObj->save();
+            }
+
+            DB::commit();
+            return  back()->with("success", "commentaires mis à jour avec succès");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return back()->with("error", "quelque chose s'est mal passé ($th)");
+        }
     }
 }

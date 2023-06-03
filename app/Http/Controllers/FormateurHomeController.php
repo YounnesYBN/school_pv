@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Donnee;
 use App\Models\Filiere;
+use App\Models\FormateurDonneeComment;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -93,7 +94,12 @@ class FormateurHomeController extends Controller
                         }
                     }
 
-                    $element->comment = null;
+                    $element->comment = FormateurDonneeComment::where([
+                        ["element_id","=",$element->id],
+                        ["filiere_id","=",$filiereOBJ->id],
+                        ["group_id","=",$groupOBJ->id],
+                        ["user_id","=",$user->id],
+                    ])->first();
 
                     // foreach ($comments as $comment) {
                     //     # all comment

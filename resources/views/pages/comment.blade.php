@@ -1,9 +1,9 @@
 @include('layouts.header')
 
 <main class="h-screen mb-5">
-    <div class="flex">
+    <div class="flex items-center justify-around mt-10">
 
-        <div id="comment_con" class=" w-2/3 pt-6 pl-4 flex flex-col items-center">
+        <div id="comment_con" class=" max-w-fit min-w-[70%] pt-6 pl-4 flex flex-col items-center">
 
             <form action="{{Route("store")}}" method="post" class="w-full mb-4">
                 <!-- insert input-->
@@ -37,13 +37,18 @@
                 <span class="font-medium">Alerte danger!</span> {{$message}}.
             </div>
             @enderror
+            @error("comment_display_input")
+            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 w-full m-6" role="alert">
+                <span class="font-medium">Alerte danger!</span> {{$message}}.
+            </div>
+            @enderror
 
-            <div class="w-full h-[350px] overflow-auto">
+            <div class="w-full max-h-[400px] min-h-fit overflow-auto">
                 <!-- table con -->
                 <table class="w-full text-sm text-left text-gray-500">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 rounded-md">
                         <tr>
-                            <th scope="col" class="px-6 py-3 w-1/12 text-center">
+                            <th scope="col" class="px-3 py-3 w-[5%] text-center">
                                 ACTIVE
                             </th>
                             <th scope="col" class="px-6 py-3 text-center w-2/3">
@@ -51,6 +56,14 @@
                             </th>
                             <th scope="col" class="py-3 text-center">
                                 ACTIONS
+                            </th>
+                            <th scope="col" class="py-3  flex justify-center">
+                                <svg fill="none" class="w-[35px]" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                                </svg>
+                            </th>
+                            <th scope="col" class="py-3 px-2 text-center">
+                                Group
                             </th>
                         </tr>
                     </thead>
@@ -62,31 +75,74 @@
                         <tr class="bg-white border-b ">
                             <form action="{{Route("updateController",["Comment"=>$data["commentOBJ"],"id"=>$comment->id])}}" method="get">
                                 @csrf
-                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap flex justify-center items-center">
-                                    <input id="default-checkbox" name="comment" {{$comment->active==true?"checked":""}} type="checkbox" value="{{ $comment->id }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                                <td class="font-medium text-gray-900 whitespace-nowrap">
+                                    <div class="w-full h-full flex justify-center items-center">
+                                        @if (isset($comment->origin_id))
+                                        <input id="default-checkbox" disabled {{$comment->active==true?"checked":""}} type="checkbox" value="{{ $comment->active }}" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                                        @else
+                                        <input id="default-checkbox" name="comment_check" {{$comment->active==true?"checked":""}} type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 ">
+                                        @endif
+                                    </div>
 
-                                    {{-- <input type="checkbox" name="comment" {{$comment->active==true?"checked":""}} value="{{ $comment->id }}"> --}}
                                 </td>
-                                <td class="py-4 font-medium text-gray-900 whitespace-nowrap ">
-                                    <input type="text" name="comment_display_input" id="first_name" class="h-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none " value="{{$comment->value}}" required>
+                                <td class="py-4 px-5 font-medium text-gray-900 whitespace-nowrap ">
+                                    @if (isset($comment->origin_id))
 
+                                    <textarea disabled rows="1" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 outline-none">
+                                    {{$comment->value}}
+                                    </textarea>
+
+                                    @else
+                                    <textarea rows="1" id="first_name" name="comment_display_input" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 outline-none " required>
+                                    {{$comment->value}}
+                                    </textarea>
+
+                                    @endif
+                                </td>
+                                <td class="h-full  py-4 font-medium text-gray-900  ">
+                                    <div class="flex justify-center items-center gap-3 ">
+
+                                        @if (isset($comment->formateur))
+                                            <a class=" py-2.5 px-2.5 hover:shadow font-medium text-red-600 rounded-md shadow-md" href="{{Route("deleteController",["Comment"=>$data["commentOBJ"],"id"=>$comment->id])}}">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                                            </svg>
+                                            </a>
+                                         @else
+
+                                            <button type="submit" class="py-2.5 px-2.5  hover:shadow  text-sm font-medium text-gray-900 focus:outline-none  hover:text-blue-700 focus:z-10   rounded-md shadow-md">
+                                                <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
+                                                </svg>
+                                            </button>
+
+
+                                            <a class=" py-2.5 px-2.5 hover:shadow font-medium text-red-600 rounded-md shadow-md" href="{{Route("deleteController",["Comment"=>$data["commentOBJ"],"id"=>$comment->id])}}">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                                                </svg>
+                                            </a>
+                                        @endif
+                                    </div>
+
+                                    
+                                </td>
+                                <td class="px-2 text-center h-full min-w-fit max-w-[100px]">
+
+                                    {{isset($comment->formateur)?$comment->formateur:"toi"}}
 
                                 </td>
-                                <td class=" py-4 font-medium text-gray-900 whitespace-nowrap flex  justify-center gap-3 ">
-                                    <button type="submit" class="py-2.5 px-2.5  hover:shadow  text-sm font-medium text-gray-900 focus:outline-none  hover:text-blue-700 focus:z-10   rounded-md shadow-md">
-                                        <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"></path>
+                                <td class="">
+                                    @if (isset($comment->formateur))
+                                    <p>{{$comment->group}}</p>
+                                    @else
+                                    <div class="w-full flex justify-center">
+
+                                        <svg class="w-[20px] jy" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15"></path>
                                         </svg>
-                                    </button>
-
-
-                                    <a class=" py-2.5 px-2.5 hover:shadow font-medium text-red-600 rounded-md shadow-md" href="{{Route("deleteController",["Comment"=>$data["commentOBJ"],"id"=>$comment->id])}}">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
-                                        </svg>
-                                    </a>
-
-
+                                    </div>
+                                    @endif
                                 </td>
                             </form>
 
@@ -95,35 +151,31 @@
                     </tbody>
                 </table>
             </div>
-            <div class="mt-5">
-                @if (count($comments) > 0)
-                <button id="save_changes" type="button" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 ">Enregistrer Les Changements</button>
-                @endif
-            </div>
+
         </div>
-        <div class=" w-4/12  flex flex-col items-center pt-4 justify-between mt-4 ">
+        <div class=" min-w-fit  max-w-[20%] h-fit  flex flex-col items-center pt-4 justify-between  ">
             <!-- info -->
 
-            <ul class=" w-4/5 h-5/6 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg">
-                <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg flex flex-col items-center h-1/4">
+            <ul class=" w-fit h-fit text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg mb-5">
+                <li class="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg flex flex-col items-center min-h-[100px] max-h-fit">
                     <!-- aspeet -->
                     <label class="block bg-blue-100 text-blue-800  font-semibold mb-1.5 px-2.5 py-0.5 rounded w-fit">ASPEETS À TRAILER</label>
                     <p class="tracking-tighter text-gray-500 text-center italic dark:text-gray-400">{{$data["aspeetOBJ"]->value}}</p>
 
 
                 </li>
-                <li class="w-full px-4 py-2 border-b border-gray-200 flex flex-col items-center h-2/5">
+                <li class="w-full px-4 py-2 border-b border-gray-200 flex flex-col items-center  min-h-[100px] max-h-fit">
                     <!-- element-->
                     <label class="block bg-blue-100 text-blue-800  font-semibold mb-1.5 px-2.5 py-0.5 rounded w-fit">Eléments de traitement</label>
                     <p class="tracking-tighter text-gray-500 text-center italic dark:text-gray-400">{{$data["elementOBJ"]->name}}</p>
 
                 </li>
-                <li class="w-full px-4 py-2 border-b border-gray-200 flex flex-col items-center h-[18%]">
+                <li class="w-full px-4 py-2 border-b border-gray-200 flex flex-col items-center min-h-[100px] max-h-fit">
                     <!-- filiere -->
                     <label class="block bg-blue-100 text-blue-800  font-semibold mb-1.5 px-2.5 py-0.5 rounded w-fit">Filiére</label>
                     <p class="tracking-tighter text-gray-500 text-center italic dark:text-gray-400">{{session("selected_filier")}}</p>
                 </li>
-                <li class="w-full px-4 py-2 rounded-b-lg flex flex-col items-center h-[18%]">
+                <li class="w-full px-4 py-2 rounded-b-lg flex flex-col items-center min-h-[100px] max-h-fit">
                     <!-- yeare -->
 
                     <label class="block bg-blue-100 text-blue-800  font-semibold mb-1.5 px-2.5 py-0.5 rounded w-fit">Année</label>
@@ -145,49 +197,6 @@
 
 </main>
 <script>
-    var element_save_btn = document.getElementById("save_changes");
-    var all_checkbox = document.querySelectorAll("input[name='comment']")
-    document.getElementById('save_changes').addEventListener("click", (e) => {
 
-        var ele = e.target;
-        ele.innerHTML = `
-
-S'il vous plaît, attendez... <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-gray-900 hover:text-blue-700 animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-<path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-</svg>
-
-`;
-    })
-    element_save_btn.addEventListener("click", function() {
-        var data = [];
-
-        for (let index = 0; index < all_checkbox.length; index++) {
-            const element = all_checkbox[index];
-            data.push({
-                id: element.value,
-                active: element.checked
-            })
-        }
-
-        fetch(window.location.origin + "/api/saveChanges", {
-            method: "post",
-            headers: {
-
-                'Content-Type': 'application/json',
-
-
-            },
-            body: JSON.stringify({
-                id_comment: {{session("selected_comment")}},
-                data: data
-            })
-        }).then((res) => {
-            if (res.ok) {
-                location.reload()
-            }
-
-        })
-    })
 </script>
 @include("layouts.footer")

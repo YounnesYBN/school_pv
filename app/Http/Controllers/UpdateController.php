@@ -54,7 +54,7 @@ class UpdateController extends Controller
     }
 
     public function UpdateComment(Request $r,Comments $Comment,string $updated_comment){
-        
+        $isActive = isset($r->comment_check)?true:false ;
         $r->validate([
              "comment_display_input"=>["required"]
         ]);
@@ -65,6 +65,7 @@ class UpdateController extends Controller
         foreach ($array_comments as $value) {
             if ($value->id == $updated_comment) {
                 $value->value = $r->comment_display_input;
+                $value->active = $isActive ;
             }
         }
 

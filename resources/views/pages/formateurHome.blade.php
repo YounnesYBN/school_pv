@@ -88,7 +88,7 @@
 
                             @if ($element->type_comment != "select")
 
-                            <input type="number" id="first_name" name="{{$element->id}}" value="{{$element->donne? $element->donne->value: " "}}" class="w-full text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5">
+                            <input type="number" id="first_name" name="{{$element->id}}" disabled value="{{$element->donne? $element->donne->value: " "}}" class="w-full text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5">
                             @endif
 
                         </div>
@@ -98,9 +98,9 @@
                     
                     <td class=" h-32 flex items-center justify-center gap-2 p-2  border-b">
                         <div class="h-4/5 w-4/5 pl-2 pt-2 pr-2 overflow-y-auto" id="comment_COM">
-                            <!-- <ol>
+                            <ol>
 
-                                <?php $comments_json = $element->comment ? json_decode($element->comment->value) : []; ?>
+                                <?php $comments_json = $element->comment ? json_decode($element->comment->comments) : []; ?>
 
                                 @foreach ( $comments_json as $valueCom)
                                 @if ($valueCom->active)
@@ -114,7 +114,7 @@
                                 @endif
                                 @endforeach
 
-                            </ol> -->
+                            </ol>
 
                         </div>
                         <button type="button" class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 ">
