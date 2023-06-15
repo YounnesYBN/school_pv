@@ -40,23 +40,33 @@ class DataExport implements FromCollection, WithHeadings
                 ])->first();
 
                 $element_value = $Donne ? $Donne->value : 0;
-                $element_comment = "";
                 $Comment = Comments::where([
                     ["filiere_id", "=", $filiere->id],
                     ["element_id", "=", $element->id],
                 ])->first();
 
                 if ($Comment) {
-                    foreach (json_decode($Comment->value) as $comments) {
-                        # code...
-                        if ($comments->active) {
-                            $element_comment .= $comments->value . PHP_EOL;
+                    $all_comments = json_decode($Comment->value);
+                    if (count($all_comments) > 0) {
+
+                        foreach ($all_comments as $comments) {
+                            # code...
+                            if ($comments->active) {
+                                $preson  = $comments->formateur ? $comments->formateur : "toi";
+                                $group = $comments->group ? $comments->group : "";
+                                $element_comment = $comments->value;
+                                $allData[] =  [$code_filire, $filiere_full_name, $filiere_year, $element_name, $element_aspeet, $element_value, $element_comment, $group, $preson];
+                            }
                         }
+                    }else{
+                        $allData[] =  [$code_filire, $filiere_full_name, $filiere_year, $element_name, $element_aspeet, $element_value, "", "", ""];
                     }
+                } else {
+                    $allData[] =  [$code_filire, $filiere_full_name, $filiere_year, $element_name, $element_aspeet, $element_value, "", "", ""];
                 }
 
 
-                $allData[] =  [$code_filire, $filiere_full_name, $filiere_year, $element_name, $element_aspeet, $element_value, $element_comment];
+                // $allData[] =  [$code_filire, $filiere_full_name, $filiere_year, $element_name, $element_aspeet, $element_value, $element_comment];
             }
         }
         (new ExportTableController)->InsertData($allData);
@@ -66,7 +76,7 @@ class DataExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
-            "CODE Filiere", "FILIERE NOM", "ANNEE", "ELÉMENTS DE TRAITEMENT", "ASPEETS À TRAILER", "LES DONNÉES", "COMMENTAIRES"
+            "CODE Filiere", "FILIERE NOM", "ANNEE", "ELÉMENTS DE TRAITEMENT", "ASPEETS À TRAILER", "LES DONNÉES", "COMMENTAIRES", "group", "preson",
         ];
     }
 }

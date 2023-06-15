@@ -96,8 +96,8 @@
                     </td>
 
                     
-                    <td class=" h-32 flex items-center justify-center gap-2 p-2  border-b">
-                        <div class="h-4/5 w-4/5 pl-2 pt-2 pr-2 overflow-y-auto" id="comment_COM">
+                    <td class="min-h-[132px] max-h-fit flex items-center justify-center gap-2 p-2  border-b">
+                        <div class="min-h-full max-h-fit w-full" id="comment_COM">
                             <ol>
 
                                 <?php $comments_json = $element->comment ? json_decode($element->comment->comments) : []; ?>
