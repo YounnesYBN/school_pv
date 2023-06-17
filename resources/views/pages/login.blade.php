@@ -6,7 +6,7 @@
 <main class="flex flex-col justify-center w-full items-center flex-1">
 
     <div class=" text-2xl subpixel-antialiased tracking-wide font-medium text-slate-400"><h1>authentification</h1></div>
-    <form action="{{Route("Onlogin")}}" method="post" class="w-1/4 flex flex-col items-center shadow-md p-4 rounded-md">
+    <form action="{{Route("Onlogin")}}" method="post" id="loginform" class="w-[400px] flex flex-col items-center shadow-md p-4 rounded-md">
         @csrf
         
             <div class="flex flex-col w-full mb-6">

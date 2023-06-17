@@ -27,6 +27,7 @@ class AccountFiliereImport implements ToModel,WithHeadingRow
                 "year" => $row["Année de formation"],
                 "group" => $row["Groupe"],
                 "formateur"=>$row["Formateur Affecté Présentiel Actif"],
+                "mat"=>$row["Mle Affecté Présentiel Actif"],
                 "filiere_name"=>$row["filière"]
                 
             ]);

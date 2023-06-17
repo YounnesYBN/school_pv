@@ -1,0 +1,16 @@
+
+@media (max-width:540px) {
+    #formateurFiliereFormCon,#cartProfileCon,#profil_card{
+        width: 100%;
+    }
+    #profil_card{
+        border: none;
+        box-shadow: none;
+    }
+    main{
+        padding: 0;
+       }
+#ofppt_onwan{
+    font-size:13px;
+}
+}

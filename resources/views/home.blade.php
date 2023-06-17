@@ -9,8 +9,8 @@
 
             @if (session("type")=="directeur")
 
-            <div class="h-fit w-full flex justify-around">
-                <div class="flex flex-col items-center justify-center mb-6 gap-6 w-2/5 p-4">
+            <div class="h-fit w-full flex  justify-around  border">
+                <div class="flex flex-col items-center justify-center mb-6 gap-6 w-[40%]  p-4 border ">
                     <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">les donne :</h4>
                     <div class="p-4  text-sm text-yellow-800 rounded-lg bg-yellow-50 w-3/4 " role="alert">
                         <span class="font-medium">Alerte d'avertissement !</span> lors de l'importation d'un nouveau fichier, les anciennes données seront supprimées.
@@ -19,7 +19,7 @@
                     <button type="button" class="  text-blue-700    font-medium rounded-lg text-sm px-5 py-2.5   focus:outline-none flex-grow-0 w-1/2"><a href="{{Route('exports')}}">toutes les exportations</a></button>
                 </div>
 
-                <div id="alert-additional-content-1" class=" w-2/5 p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50" role="alert">
+                <div id="alert-additional-content-1" class="h-fit w-[40%] p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50" role="alert">
                     <div class="flex items-center">
                         <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">Comptes et Filieres :</h4>
 

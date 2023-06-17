@@ -7,6 +7,9 @@
     display: none;
 } */
 
-body{
-    
+@media (max-width:450px) {
+    #loginform{
+        width: 100%;
+        box-shadow: none;
+    }
 }

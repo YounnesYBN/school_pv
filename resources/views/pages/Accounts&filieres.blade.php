@@ -125,7 +125,7 @@
                             @endif
                             <td class=" font-medium  whitespace-nowrap text-center h-full">
 
-                                {{$formateur->email}}
+                                {{$formateur->username}}
 
                             </td>
                             <td class=" font-medium text-gray-900 h-full flex justify-center items-center gap-4">

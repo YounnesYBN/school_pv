@@ -26,7 +26,7 @@ class ExportselectedData implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
-            "CODE Filiere", "FILIERE NOM", "ANNEE", "ELÉMENTS DE TRAITEMENT", "ASPEETS À TRAILER", "LES DONNÉES", "COMMENTAIRES"
+            "CODE Filiere", "FILIERE NOM", "ANNEE", "ELÉMENTS DE TRAITEMENT", "ASPEETS À TRAILER", "LES DONNÉES", "COMMENTAIRES","GROUP","FORMATEUR"
         ];
     }
 }

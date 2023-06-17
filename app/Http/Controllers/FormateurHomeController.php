@@ -117,6 +117,7 @@ class FormateurHomeController extends Controller
             "shouldTbaleDisplay" => $shouldTableDisplay,
             "selectedFiliere" =>isset($filiereOBJ)?$filiereOBJ:null,
             "selectedGroup"=>isset($groupOBJ)?$groupOBJ:null,
+            "user"=>$user
         ]);
     }
 }

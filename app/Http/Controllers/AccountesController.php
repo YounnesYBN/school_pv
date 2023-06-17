@@ -182,7 +182,6 @@ class AccountesController extends Controller
 
                         $user = User::where([
                             ["email", "=", $formateur->formateur],
-                            ["password", "=", $formateur->formateur],
                             ["type_id", "=", $formateurType->id]
                         ])->first();
 
@@ -196,6 +195,7 @@ class AccountesController extends Controller
 
                             $user =  new User([
                                 "email" => strtolower($formateur->formateur),
+                                "username"=>strtolower($formateur->formateur),
                                 "password" => strtolower($formateur->formateur),
                                 "type_id" => $formateurType->id,
                             ]);

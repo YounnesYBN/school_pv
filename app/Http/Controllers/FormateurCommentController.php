@@ -81,7 +81,7 @@ class FormateurCommentController extends Controller
         $newComment = [
             "active" => $request->checkbox_active == true ? true : false,
             "value" => $request->input_comment,
-            "formateur" => $userOBJ->email,
+            "formateur" => $userOBJ->username,
             "group" => $group->name,
         ];
         try {

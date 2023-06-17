@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('password');
+            $table->string("username")->default("");
             $table->foreignId("type_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->boolean("active")->default(true);
             $table->timestamps();

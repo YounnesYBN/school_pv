@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string("aspeets_tailer");
             $table->string("donnees");
             $table->text("commentaires");
+            $table->string("group");
+            $table->string("person");
             $table->foreignId("export_id")->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

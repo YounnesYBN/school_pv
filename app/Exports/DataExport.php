@@ -52,8 +52,8 @@ class DataExport implements FromCollection, WithHeadings
                         foreach ($all_comments as $comments) {
                             # code...
                             if ($comments->active) {
-                                $preson  = $comments->formateur ? $comments->formateur : "toi";
-                                $group = $comments->group ? $comments->group : "";
+                                $preson  = isset($comments->formateur) ? $comments->formateur : "toi";
+                                $group = isset($comments->group) ? $comments->group : "";
                                 $element_comment = $comments->value;
                                 $allData[] =  [$code_filire, $filiere_full_name, $filiere_year, $element_name, $element_aspeet, $element_value, $element_comment, $group, $preson];
                             }

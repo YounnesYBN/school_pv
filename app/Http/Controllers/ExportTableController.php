@@ -34,6 +34,8 @@ class ExportTableController extends Controller
                 $ExportDataOBJ->aspeets_tailer = $row[4];
                 $ExportDataOBJ->donnees = $row[5];
                 $ExportDataOBJ->commentaires = $row[6];
+                $ExportDataOBJ->group = $row[7];
+                $ExportDataOBJ->person = $row[8];
                 return $ExportDataOBJ;
             }, $data);
 
@@ -58,7 +60,7 @@ class ExportTableController extends Controller
     {
 
         $export = Export::find($id);
-        $data = DataExport::where("export_id", $id)->get(["code_filiere", "filiere_nom", "annee", "elements_de_traitement", "aspeets_tailer", "donnees", "commentaires"]);
+        $data = DataExport::where("export_id", $id)->get(["code_filiere", "filiere_nom", "annee", "elements_de_traitement", "aspeets_tailer", "donnees", "commentaires","group","person"]);
         $file_name = "calcul_demande_sur_la_base_+_CARTE_FORMATION_REALISEE ".$export->export_date;
         return Excel::download((new ExportselectedData($data)),"$file_name.xlsx");
     }

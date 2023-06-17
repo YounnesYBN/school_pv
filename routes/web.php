@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormateurHomeController;
+use App\Http\Controllers\FormateurProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,7 +88,8 @@ Route::get("FormateurComment/{group}/{element}/{filiere}",[FormateurCommentContr
 Route::post("AddCommentFormateur/{group}/{element}/{filiere}",[FormateurCommentController::class,"AddComment"])->middleware("loginMiddleware")->name("FormateurCommentAdd");
 Route::get("DeleteCommentFormateur/{comment}/{id}",[FormateurCommentController::class,"DeleteComment"])->middleware("loginMiddleware")->name("FormateurCommentDelete");
 Route::post("UpdateCommentFormateur/{comment}/{id}",[FormateurCommentController::class,"UpdateComment"])->middleware("loginMiddleware")->name("FormateurCommentUpdate");
-
+Route::get("FormateurProfile",[FormateurProfileController::class,"edite"])->middleware("loginMiddleware")->name("FormateurProfile");
+Route::put("updateProfile",[FormateurProfileController::class,"update"])->middleware("loginMiddleware")->name("updateProfile");
 Route::get("/GetGroups/{filiere}",function($filiere){
     $user = User::where("email",session("email"))->first();
     // $groups = $user->group()->get();

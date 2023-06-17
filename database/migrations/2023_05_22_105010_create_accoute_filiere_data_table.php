@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('accoute_filiere_data', function (Blueprint $table) {
             $table->id();
             $table->string("formateur");
+            $table->string("mat");
             $table->string("group");
             $table->string("filiere_code");
             $table->string("filiere_name");
