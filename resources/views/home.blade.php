@@ -9,23 +9,23 @@
 
             @if (session("type")=="directeur")
 
-            <div class="h-fit w-full flex  justify-around  border">
-                <div class="flex flex-col items-center justify-center mb-6 gap-6 w-[40%]  p-4 border ">
-                    <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">les donne :</h4>
+            <div class="h-fit w-full flex  justify-around  ">
+                <div class="flex flex-col items-center justify-center mb-6 gap-6 w-[40%]  p-4  ">
+                    <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">les donnes :</h4>
                     <div class="p-4  text-sm text-yellow-800 rounded-lg bg-yellow-50 w-3/4 " role="alert">
-                        <span class="font-medium">Alerte d'avertissement !</span> lors de l'importation d'un nouveau fichier, les anciennes données seront supprimées.
+                        <span class="font-medium">Alerte !</span> les nouvelles données qui seront générées dépendront du filieres que vous avez généré auparavant.
                     </div>
                     <button type="button" class="shadow-xl hover:shadow-md duration-100 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2  focus:outline-none flex-grow-0 w-1/2"><a href="{{Route("upload")}}">importer un nouveau fichier</a></button>
-                    <button type="button" class="  text-blue-700    font-medium rounded-lg text-sm px-5 py-2.5   focus:outline-none flex-grow-0 w-1/2"><a href="{{Route('exports')}}">toutes les exportations</a></button>
+                    <button type="button" class="  text-blue-700    font-medium rounded-lg text-sm px-5 py-2.5   focus:outline-none flex-grow-0 w-1/2"><a href="{{Route('exports')}}">historique des téléchargements</a></button>
                 </div>
 
-                <div id="alert-additional-content-1" class="h-fit w-[40%] p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50" role="alert">
+                <div id="alert-additional-content-1" class=" w-[40%] p-4 mb-4 text-blue-800 border border-blue-300 rounded-lg bg-blue-50" role="alert">
                     <div class="flex items-center">
                         <h4 class=" self-start text-2xl font-extrabold leading-none tracking-tight  md:text-2xl lg:text-2xl text-blue-600 dark:text-blue-500">Comptes et Filieres :</h4>
 
                     </div>
                     <div class="mt-2 mb-4 text-lg">
-                        <span class="font-medium">Alerte d'avertissement !</span> tous les comptes et filiere seront supprimés et recréés en fonction du fichier que vous avez importé
+                        <span class="font-medium">Alerte !</span>lorsque vous importez le fichier, les filières, les comptes et les données actuels seront supprimées et généreront de nouveau filières et comptes en fonction du nouveau fichier
                     </div>
                     <div class="flex items-center justify-around h-1/2 ">
                         <button type="button" class="text-sm font-medium text-gray-900 focus:outline-none bg-white  px-5 py-2.5 rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 flex-grow-0 w-fit">
@@ -62,7 +62,7 @@
                 <div id="filiere_con">
                     <label class="block mb-2 text-sm font-medium text-gray-900">filière :</label>
                     <select id="filierSelect" value="{{old("filierSelect")}}" class=" bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-green-500 focus:border-green-500 block w-full py-2.5 px-5 outline-none text-center" name="filierSelect">
-                        <option value="all">La Somme De Toutes Les Filière 1A & 2A</option>
+                        <option value="all">La somme De toutes Les filières 1A et 2A</option>
                     </select>
                 </div>
                 <div id="loading_con" class="hidden w-56 text-center">
@@ -166,15 +166,15 @@
                                 @if ($valueCom->active)
 
                                 <li class="italic  w-fit text-slate-600/75 space break-words text-md font-medium m-2 flex items-center">
-                                    
-                                   <p class="w-fit">
-                                    @if (isset($valueCom->group))
-                                    <span class="inline-flex items-center justify-center h-fit  p-1.5 text-xs font-semibold text-blue-800 bg-blue-200 rounded-[5px]">
-                                        {{$valueCom->group}}
-                                    </span>
-                                    @endif
-                                    <span class="font-semibold text-gray-900 mx-1 ">{{isset($valueCom->formateur)?$valueCom->formateur: "Toi" }} :</span> "{{$valueCom->value}}"
-                                    </p> 
+
+                                    <p class="w-fit">
+                                        @if (isset($valueCom->group))
+                                        <span class="inline-flex items-center justify-center h-fit  p-1.5 text-xs font-semibold text-blue-800 bg-blue-200 rounded-[5px]">
+                                            {{$valueCom->group}}
+                                        </span>
+                                        @endif
+                                        <span class="font-semibold text-gray-900 mx-1 ">{{isset($valueCom->formateur)?$valueCom->formateur: "Vous" }} :</span> "{{$valueCom->value}}"
+                                    </p>
                                 </li>
                                 @endif
                                 @endforeach
@@ -200,9 +200,9 @@
 
         <div class="flex justify-center items-center gap-10 mt-8">
             <button type="submit" id="save-button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 ">Sauvegarder les modifications</button>
-            @if (session("type")=="directeur")
-            <button type="button" class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"><a href="{{Route("OnExport")}}" id="download_file_button">Télécharger le fichier excel de Toute les filiéres</a></button>
-            @endif
+
+            <button type="button" class="py-2.5 px-5  text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200"><a href="{{Route("OnExport")}}" id="download_file_button">Télécharger le fichier excel de Toutes les filières</a></button>
+
         </div>
 
     </form>
@@ -212,7 +212,7 @@
         <svg aria-hidden="true" class="w-10 h-10 text-gray-400 dark:text-gray-600" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.017 18L14.017 10.609C14.017 4.905 17.748 1.039 23 0L23.995 2.151C21.563 3.068 20 5.789 20 8H24V18H14.017ZM0 18V10.609C0 4.905 3.748 1.038 9 0L9.996 2.151C7.563 3.068 6 5.789 6 8H9.983L9.983 18L0 18Z" fill="currentColor" />
         </svg>
-        <p>"importez le fichier pour créer d'abord des filieres, puis des données ."</p>
+        <p>"importez le fichier pour créer d'abord des filières, puis des données."</p>
     </blockquote>
     @endif
 

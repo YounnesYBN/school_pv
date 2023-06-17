@@ -20,7 +20,7 @@
 
                     <div class=" w-4/5">
                         <label for="first_name" class="block bg-blue-100 text-blue-800  font-semibold mb-1.5 px-2.5 py-0.5 rounded w-fit">commentaire</label>
-                        <input placeholder="créez votre commentaire..." value="{{old("input_comment")}}" type="text" name="input_comment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none">
+                        <input placeholder="saisir un commentaire..." value="{{old("input_comment")}}" type="text" name="input_comment" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 outline-none">
                     </div>
 
                     <div class="w-fit">
@@ -85,17 +85,13 @@
                                     </div>
 
                                 </td>
-                                <td class="py-4 px-5 font-medium text-gray-900 whitespace-nowrap ">
+                                <td class="py-4 px-5 font-medium text-gray-900  ">
                                     @if (isset($comment->origin_id))
 
-                                    <textarea disabled rows="1" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 outline-none">
-                                    {{$comment->value}}
-                                    </textarea>
+                                    <textarea disabled rows="1" class=" whitespace-nowrap block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 outline-none">{{$comment->value}}</textarea>
 
                                     @else
-                                    <textarea rows="1" id="first_name" name="comment_display_input" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 outline-none " required>
-                                    {{$comment->value}}
-                                    </textarea>
+                                    <textarea rows="1" id="first_name" name="comment_display_input" class=" whitespace-nowrap block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 outline-none " required>{{$comment->value}}</textarea>
 
                                     @endif
                                 </td>
@@ -129,7 +125,7 @@
                                 </td>
                                 <td class="px-2 text-center h-full min-w-fit max-w-[100px]">
 
-                                    {{isset($comment->formateur)?$comment->formateur:"toi"}}
+                                    {{isset($comment->formateur)?$comment->formateur:"Vous"}}
 
                                 </td>
                                 <td class="">

@@ -132,7 +132,7 @@ class FormateurCommentController extends Controller
             return redirect()->back()->with("success", "commentaire ajouté avec succès");
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with("error", "quelque chose s'est mal passé($th)");
+            return back()->with("error", "quelque chose s'est mal passé");
         }
     }
 
@@ -173,7 +173,7 @@ class FormateurCommentController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
-            return back()->with("error", "quelque chose s'est mal passé ($th)");
+            return back()->with("error", "quelque chose s'est mal passé ");
         }
     }
 
@@ -254,7 +254,7 @@ class FormateurCommentController extends Controller
             return  back()->with("success", "commentaires mis à jour avec succès");
         } catch (\Throwable $th) {
             DB::rollBack();
-            return back()->with("error", "quelque chose s'est mal passé ($th)");
+            return back()->with("error", "quelque chose s'est mal passé");
         }
     }
 }

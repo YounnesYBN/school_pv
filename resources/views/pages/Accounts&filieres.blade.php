@@ -66,14 +66,14 @@
         <div class=" w-[55%] flex flex-col h-fit items-center px-5">
 
             <div class=" h-fit flex justify-center items-center gap-2 mb-5">
-                <p class="underline underline-offset-3 decoration-8 decoration-blue-400 text-3xl font-bold text-center">total des Formateurs:</p>
+                <p class="underline underline-offset-3 decoration-8 decoration-blue-400 text-3xl font-bold text-center">Nombre  des Formateurs:</p>
                 <mark class="px-2 text-white text-4xl bg-blue-600 rounded h-fit">{{$count}}</mark>
             </div>
             <!-- /--------------------- -->
             @if ($count > 0)
 
-            <div class="w-full flex justify-end pr-4 gap-3 mb-2">
-                <form class="self-start w-[71%] flex " action="{{Route("accountes")}}">
+            <div class="w-full flex justify-between pr-4 gap-3 mb-2">
+                <form class=" w-[50%] flex " action="{{Route("accountes")}}">
                     <div class="relative z-0 w-2/3 group">
                         <input  name="search" id="floating_email" value="{{isset($search)?$search:null}}" class="block py-2.5 px-1 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none  focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                         <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">recherche</label>
@@ -92,8 +92,11 @@
                         </a>
                     @endif
                 </form>
-                <a href="{{route("activeAllFormateur")}}"><button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-1.5 py-1.5 h-fit w-fit ">actif Tous</button></a>
-                <a href="{{route("disactiveAllFormateur")}}"><button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-1.5 py-1.5 h-fit w-fit">désactiver tout</button></a>
+                <div class="w-fit flex items-end gap-2">
+                    <a href="{{route("activeAllFormateur")}}" class="w-fit"><button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-1.5 py-1.5 h-fit w-fit ">active tous</button></a>
+
+                    <a href="{{route("disactiveAllFormateur")}}" class="w-fit"><button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-1.5 py-1.5 h-fit w-fit">désactiver tout</button></a>
+                </div>
 
             </div>
             <!-- /---------table-------- -->

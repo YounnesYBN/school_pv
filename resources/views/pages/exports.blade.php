@@ -50,8 +50,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75"></path>
                 </svg>Retour à la page d'accueil</button>
         </a>
-        <div class="w-5/6 h-fit flex justify-center items-center gap-2">
-            <p class="underline underline-offset-3 decoration-8 decoration-blue-400 text-3xl font-bold text-center">total des exportations:</p>
+        <div class="w-fit h-fit flex justify-center items-center gap-2">
+            <p class="underline underline-offset-3 decoration-8 decoration-blue-400 text-3xl font-bold text-center w-fit">Nombre des exportations:</p>
             <mark class="px-2 text-white text-4xl bg-blue-600 rounded h-fit">{{count($data)}}</mark>
         </div>
     </div>
